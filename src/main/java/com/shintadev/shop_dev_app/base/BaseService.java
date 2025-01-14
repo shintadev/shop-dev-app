@@ -1,8 +1,16 @@
 package com.shintadev.shop_dev_app.base;
 
-public interface BaseService<T, ID> {
+import java.util.List;
 
-  public T save(T entity);
+public interface BaseService<T, ID, CreateDto, UpdateDto> {
 
-  public T findById(ID id);
+  T create(CreateDto t);
+
+  List<T> findAll();
+
+  T findOne(ID id);
+
+  T update(ID id, UpdateDto t);
+
+  void delete(ID id);
 }

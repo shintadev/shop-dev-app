@@ -11,18 +11,6 @@ import com.shintadev.shop_dev_app.service.ProductService;
 public class ProductServiceImpl implements ProductService {
 
   @Override
-  public Product save(Product entity) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'save'");
-  }
-
-  @Override
-  public Product findById(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findById'");
-  }
-
-  @Override
   public List<Product> findByName(String name) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'findByName'");

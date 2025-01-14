@@ -5,6 +5,8 @@ import java.sql.Date;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.shintadev.shop_dev_app.common.SoftDeletable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +16,7 @@ import lombok.Data;
 
 @MappedSuperclass
 @Data
-public abstract class BaseEntity {
+public abstract class BaseEntity implements SoftDeletable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +24,23 @@ public abstract class BaseEntity {
   private Long id;
 
   @CreationTimestamp
+  @Column(updatable = false)
   private Date createAt;
 
   @UpdateTimestamp
+  @Column()
   private Date updateAt;
+
+  @Column(nullable = false, columnDefinition = "boolean default false")
+  private boolean deleted;
+
+  @Override
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
+
+  @Override
+  public boolean isDeleted() {
+    return this.deleted;
+  }
 }
