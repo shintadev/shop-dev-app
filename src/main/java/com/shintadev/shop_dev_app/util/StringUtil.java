@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 public class StringUtil {
 
   private StringUtil() {
-    // private constructor to hide the implicit public one
   }
 
   public static boolean isVNMobile(String mobile) {
