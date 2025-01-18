@@ -7,7 +7,8 @@ services:
     command: [
       '--character-set-server=utf8mb4',
       '--collation-server=utf8mb4_unicode_ci',
-      '--skip-character-set-client-handshake'  
+      '--skip-character-set-client-handshake',
+      '--max_connections=1000',
     ]
     env_file:
       - .env.dev
