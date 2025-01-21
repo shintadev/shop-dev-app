@@ -1,15 +1,21 @@
 package com.shintadev.shop_dev_app.model;
 
+import java.util.List;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -31,9 +37,7 @@ public class User extends BaseEntity {
   @Column(name = "phone", length = 16, nullable = true)
   private String phone;
 
-  @Column(name = "username", length = 128, nullable = false, unique = true)
-  private String username;
-
-  @Column(name = "password", length = 128, nullable = false)
-  private String password;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private List<Order> orders;
 }

@@ -12,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @MappedSuperclass
@@ -24,11 +26,13 @@ public abstract class BaseEntity implements SoftDeletable {
   private Long id;
 
   @CreationTimestamp
-  @Column(updatable = false)
+  @Temporal(TemporalType.DATE)
+  @Column(name = "create_at", updatable = false)
   private Date createAt;
 
   @UpdateTimestamp
-  @Column()
+  @Temporal(TemporalType.DATE)
+  @Column(name = "update_at")
   private Date updateAt;
 
   @Column(nullable = false, columnDefinition = "boolean default false")

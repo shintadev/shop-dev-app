@@ -39,11 +39,6 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findByUsername(String username) {
-    return userRepo.findByUsername(username);
-  }
-
-  @Override
   public User update(Long id, UserDto userDto) {
     return userRepo.saveAndFlush(objectMapper.convertValue(userDto, User.class));
   }

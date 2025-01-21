@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.shintadev.shop_dev_app.model.Product;
+import com.shintadev.shop_dev_app.model.product.Product;
 import com.shintadev.shop_dev_app.service.ProductService;
 
 @Service
