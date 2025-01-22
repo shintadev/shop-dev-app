@@ -1,11 +1,10 @@
 package com.shintadev.shop_dev_app.service;
 
 import com.shintadev.shop_dev_app.base.BaseService;
-import com.shintadev.shop_dev_app.dto.user.UserDto;
-import com.shintadev.shop_dev_app.model.User;
+import com.shintadev.shop_dev_app.payload.user.UserDto;
 
-public interface UserService extends BaseService<User, Long, UserDto, UserDto> {
+public interface UserService extends BaseService<UserDto, Long, UserDto, UserDto> {
 
-  User findByEmail(String email);
+  UserDto findByEmail(String email);
 
 }

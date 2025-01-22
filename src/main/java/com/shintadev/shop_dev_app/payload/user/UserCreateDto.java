@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.dto.user;
+package com.shintadev.shop_dev_app.payload.user;
 
 import lombok.Data;
 

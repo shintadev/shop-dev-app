@@ -1,12 +1,13 @@
 package com.shintadev.shop_dev_app.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.shintadev.shop_dev_app.base.BaseService;
-import com.shintadev.shop_dev_app.dto.product.ProductDto;
-import com.shintadev.shop_dev_app.model.product.Product;
+import com.shintadev.shop_dev_app.payload.product.ProductDto;
 
-public interface ProductService extends BaseService<Product, Long, ProductDto, ProductDto> {
-  public List<Product> findByName(String name);
+public interface ProductService extends BaseService<ProductDto, Long, ProductDto, ProductDto> {
+
+  public Page<ProductDto> findByName(String name, Pageable pageable);
 
 }

@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.dto.user.UserCreateDto;
 import com.shintadev.shop_dev_app.model.product.Product;
+import com.shintadev.shop_dev_app.payload.user.UserCreateDto;
 import com.shintadev.shop_dev_app.service.ProductService;
 
 @RestController

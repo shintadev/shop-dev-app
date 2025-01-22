@@ -4,7 +4,7 @@ spring:
   application:
     name: shop-dev-app
   datasource:
-    url: jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:shopdev}
+    url: jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:shopdev}?useSSL=false&serverTimezone=UTC+7
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.jdbc.Driver
@@ -17,5 +17,11 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        security: DEBUG
 
 

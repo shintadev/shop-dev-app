@@ -8,12 +8,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shintadev.shop_dev_app.dto.user.UserDto;
 import com.shintadev.shop_dev_app.model.User;
+import com.shintadev.shop_dev_app.payload.user.UserDto;
 import com.shintadev.shop_dev_app.repository.UserRepo;
 import com.shintadev.shop_dev_app.service.UserService;
 
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
   @Autowired
@@ -23,28 +27,50 @@ public class UserServiceImpl implements UserService {
   private ObjectMapper objectMapper;
 
   @Override
-  public User create(UserDto userDto) {
-    User user = objectMapper.convertValue(userDto, User.class);
-    return userRepo.saveAndFlush(user);
+  @Transactional
+  public UserDto create(UserDto userDto) {
+    User user = convertToEntity(userDto);
+    User newUser = userRepo.saveAndFlush(user);
+
+    return convertToDto(newUser);
   }
 
   @Override
-  public Page<User> findAll(Pageable pageable) {
-    return userRepo.findAll(pageable);
+  public Page<UserDto> findAll(Pageable pageable) {
+    Page<User> users = userRepo.findAll(pageable);
+
+    return users.map(this::convertToDto);
   }
 
   @Override
-  public User findOne(Long id) {
-    return userRepo.findById(id).orElse(null);
+  public UserDto findOne(Long id) {
+    User user = userRepo.findById(id).orElse(null);
+
+    return convertToDto(user);
   }
 
   @Override
-  public User update(Long id, UserDto userDto) {
-    return userRepo.saveAndFlush(objectMapper.convertValue(userDto, User.class));
+  @Transactional
+  public UserDto update(Long id, UserDto userDto) {
+    if (!isExists(id)) {
+      return null;
+    }
+
+    User user = convertToEntity(userDto);
+    user.setId(id);
+    User updatedUser = userRepo.saveAndFlush(user);
+
+    return convertToDto(updatedUser);
   }
 
   @Override
+  @Transactional
   public void delete(Long id) {
+    if (isExists(id)) {
+      log.info("User with id {} is not found", id);
+      return;
+    }
+
     userRepo.deleteById(id);
   }
 
@@ -54,8 +80,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findByEmail(String email) {
-    return userRepo.findByEmail(email);
+  public UserDto findByEmail(String email) {
+    User user = userRepo.findByEmail(email);
+
+    return convertToDto(user);
   }
 
+  private UserDto convertToDto(User user) {
+    return objectMapper.convertValue(user, UserDto.class);
+  }
+
+  private User convertToEntity(UserDto userDto) {
+    return objectMapper.convertValue(userDto, User.class);
+  }
 }

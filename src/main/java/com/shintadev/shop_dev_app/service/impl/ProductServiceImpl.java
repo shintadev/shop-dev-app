@@ -2,57 +2,94 @@ package com.shintadev.shop_dev_app.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.shintadev.shop_dev_app.dto.product.ProductDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shintadev.shop_dev_app.model.product.Product;
+import com.shintadev.shop_dev_app.payload.product.ProductDto;
+import com.shintadev.shop_dev_app.repository.ProductRepo;
 import com.shintadev.shop_dev_app.service.ProductService;
 
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
+  @Autowired
+  private ProductRepo productRepo;
+
+  @Autowired
+  private ObjectMapper objectMapper;
+
   @Override
-  public List<Product> findByName(String name) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findByName'");
+  @Transactional
+  public ProductDto create(ProductDto t) {
+    Product product = convertToEntity(t);
+    Product newProduct = productRepo.saveAndFlush(product);
+
+    return convertToDto(newProduct);
   }
 
   @Override
-  public Product create(ProductDto t) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'create'");
+  public Page<ProductDto> findAll(Pageable pageable) {
+    Page<Product> products = productRepo.findAll(pageable);
+
+    return products.map(this::convertToDto);
   }
 
   @Override
-  public Page<Product> findAll(Pageable pageable) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+  public ProductDto findOne(Long id) {
+    Product product = productRepo.findById(id).orElse(null);
+
+    return convertToDto(product);
   }
 
   @Override
-  public Product findOne(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findOne'");
+  @Transactional
+  public ProductDto update(Long id, ProductDto t) {
+    if (!isExists(id)) {
+      return null;
+    }
+
+    Product product = convertToEntity(t);
+    product.setId(id);
+    Product updatedProduct = productRepo.saveAndFlush(product);
+
+    return convertToDto(updatedProduct);
   }
 
   @Override
-  public Product update(Long id, ProductDto t) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'update'");
-  }
-
-  @Override
+  @Transactional
   public void delete(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    if (!isExists(id)) {
+      return;
+    }
+
+    productRepo.deleteById(id);
   }
 
   @Override
   public boolean isExists(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isExists'");
+    return productRepo.existsById(id);
   }
 
+  @Override
+  public Page<ProductDto> findByName(String name, Pageable pageable) {
+    Page<Product> products = productRepo.findByName(name, pageable);
+
+    return products.map(this::convertToDto);
+  }
+
+  private Product convertToEntity(ProductDto productDto) {
+    return objectMapper.convertValue(productDto, Product.class);
+  }
+
+  private ProductDto convertToDto(Product product) {
+    return objectMapper.convertValue(product, ProductDto.class);
+  }
 }
