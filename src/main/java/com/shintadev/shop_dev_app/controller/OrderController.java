@@ -1,6 +1,7 @@
 package com.shintadev.shop_dev_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.model.Order;
-import com.shintadev.shop_dev_app.payload.user.UserCreateDto;
+import com.shintadev.shop_dev_app.payload.order.OrderDto;
 import com.shintadev.shop_dev_app.service.OrderService;
 
 @RestController
@@ -28,21 +28,17 @@ public class OrderController {
   private OrderService orderService;
 
   @PostMapping
-  public ResponseEntity<?> add(@RequestBody UserCreateDto user) {
-    // TODO: process POST request
-
-    return new ResponseEntity<>(user, HttpStatus.CREATED);
+  public ResponseEntity<OrderDto> add(@RequestBody OrderDto orderDto) {
+    return new ResponseEntity<>(orderService.create(orderDto), HttpStatus.CREATED);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getById(@PathVariable String id) {
-    // TODO: process GET request
-
-    return new ResponseEntity<>(id, HttpStatus.OK);
+  public ResponseEntity<OrderDto> getById(@PathVariable String id) {
+    return new ResponseEntity<>(orderService.findOne(Long.parseLong(id)), HttpStatus.OK);
   }
 
   @GetMapping
-  public ResponseEntity<?> getAll(
+  public ResponseEntity<Page<OrderDto>> getAll(
       @RequestParam int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "id") String sort,
@@ -56,16 +52,29 @@ public class OrderController {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable String id, @RequestBody String entity) {
-    // TODO: process PATCH request
-
-    return new ResponseEntity<>(entity, HttpStatus.OK);
+  public ResponseEntity<OrderDto> update(@PathVariable String id, @RequestBody OrderDto orderDto) {
+    return new ResponseEntity<>(orderService.update(Long.parseLong(id), orderDto), HttpStatus.OK);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> delete(@PathVariable String id) {
-    // TODO: process DELETE request
+  public ResponseEntity<String> delete(@PathVariable String id) {
+    orderService.delete(Long.parseLong(id));
 
     return new ResponseEntity<>(id, HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/customer/{userId}")
+  public ResponseEntity<Page<OrderDto>> getByUserId(
+      @PathVariable String userId,
+      @RequestParam int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "id") String sort,
+      @RequestParam(defaultValue = "desc") String order) {
+    int pageNumber = Math.max(0, page - 1);
+    Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC
+        : Sort.Direction.DESC;
+    Sort sortBy = Sort.by(direction, sort);
+    Pageable pageable = PageRequest.of(pageNumber, size, sortBy);
+    return new ResponseEntity<>(orderService.findByUserId(Long.parseLong(userId), pageable), HttpStatus.OK);
   }
 }

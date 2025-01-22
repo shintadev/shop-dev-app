@@ -1,6 +1,7 @@
 package com.shintadev.shop_dev_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,11 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.model.product.Product;
-import com.shintadev.shop_dev_app.payload.user.UserCreateDto;
+import com.shintadev.shop_dev_app.payload.product.ProductDto;
 import com.shintadev.shop_dev_app.service.ProductService;
 
 @RestController
@@ -29,21 +28,17 @@ public class ProductController {
   private ProductService productService;
 
   @PostMapping
-  public ResponseEntity<?> add(@RequestBody UserCreateDto user) {
-    // TODO: process POST request
-
-    return new ResponseEntity<>(user, HttpStatus.CREATED);
+  public ResponseEntity<ProductDto> add(@RequestBody ProductDto productDto) {
+    return new ResponseEntity<>(productService.create(productDto), HttpStatus.CREATED);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getById(@PathVariable String id) {
-    // TODO: process GET request
-
-    return new ResponseEntity<>(id, HttpStatus.OK);
+  public ResponseEntity<ProductDto> getById(@PathVariable String id) {
+    return new ResponseEntity<>(productService.findOne(Long.parseLong(id)), HttpStatus.OK);
   }
 
   @GetMapping
-  public ResponseEntity<?> getAll(
+  public ResponseEntity<Page<ProductDto>> getAll(
       @RequestParam int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "id") String sort,
@@ -57,17 +52,37 @@ public class ProductController {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable String id, @RequestBody String entity) {
-    // TODO: process PATCH request
-
-    return new ResponseEntity<>(entity, HttpStatus.OK);
+  public ResponseEntity<ProductDto> update(@PathVariable String id, @RequestBody ProductDto productDto) {
+    return new ResponseEntity<>(productService.update(Long.parseLong(id), productDto), HttpStatus.OK);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> delete(@PathVariable String id) {
-    // TODO: process DELETE request
+  public ResponseEntity<String> delete(@PathVariable String id) {
+    productService.delete(Long.parseLong(id));
 
     return new ResponseEntity<>(id, HttpStatus.OK);
+  }
+
+  @GetMapping("/{name}")
+  public ResponseEntity<Page<ProductDto>> getByName(
+      @PathVariable String name,
+      @RequestParam int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "id") String sort,
+      @RequestParam(defaultValue = "desc") String order) {
+    int pageNumber = Math.max(0, page - 1);
+    Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC
+        : Sort.Direction.DESC;
+    Sort sortBy = Sort.by(direction, sort);
+    Pageable pageable = PageRequest.of(pageNumber, size, sortBy);
+    return new ResponseEntity<>(productService.findByName(name, pageable), HttpStatus.OK);
+  }
+
+  @GetMapping("/{slug}")
+  public ResponseEntity<ProductDto> getBySlug(@PathVariable String slug) {
+    // TODO: process GET request
+    return new ResponseEntity<>(HttpStatus.OK);
+    // return new ResponseEntity<>(productService.findBySlug(slug), HttpStatus.OK);
   }
 
 }

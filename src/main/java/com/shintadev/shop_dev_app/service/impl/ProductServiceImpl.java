@@ -1,7 +1,5 @@
 package com.shintadev.shop_dev_app.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Page<ProductDto> findByName(String name, Pageable pageable) {
-    Page<Product> products = productRepo.findByName(name, pageable);
+    Page<Product> products = productRepo.findByNameLike(name, pageable);
 
     return products.map(this::convertToDto);
   }
