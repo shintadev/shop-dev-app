@@ -63,13 +63,17 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public void delete(Long id) {
-    if (isExists(id)) {
-      log.info("User with id {} is not found", id);
-      return;
+  public UserDto delete(Long id) {
+    User user = userRepo.findById(id).orElse(null);
+    if (user == null) {
+      log.error("User with id {} not found", id);
+      return null;
     }
 
-    userRepo.deleteById(id);
+    user.setDeleted(true);
+    User deletedUser = userRepo.saveAndFlush(user);
+
+    return convertToDto(deletedUser);
   }
 
   @Override

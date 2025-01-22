@@ -1,5 +1,6 @@
 package com.shintadev.shop_dev_app.service.impl;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,13 +64,16 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   @Transactional
-  public void delete(Long id) {
-    if (!isExists(id)) {
-      log.error("Order with id {} not found", id);
-      return;
+  public OrderDto delete(Long id) {
+    Order order = orderRepo.findById(id).orElse(null);
+    if (order == null) {
+      return null;
     }
 
-    orderRepo.deleteById(id);
+    order.setDeleted(true);
+    Order deletedOrder = orderRepo.saveAndFlush(order);
+
+    return convertToDto(deletedOrder);
   }
 
   @Override

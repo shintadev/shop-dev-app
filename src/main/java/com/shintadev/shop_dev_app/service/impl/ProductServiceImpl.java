@@ -63,12 +63,16 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public void delete(Long id) {
-    if (!isExists(id)) {
-      return;
+  public ProductDto delete(Long id) {
+    Product product = productRepo.findById(id).orElse(null);
+    if (product == null) {
+      return null;
     }
 
-    productRepo.deleteById(id);
+    product.setDeleted(true);
+    Product deletedProduct = productRepo.saveAndFlush(product);
+
+    return convertToDto(deletedProduct);
   }
 
   @Override

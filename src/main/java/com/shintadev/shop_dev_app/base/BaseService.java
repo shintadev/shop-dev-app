@@ -13,7 +13,7 @@ public interface BaseService<T, ID, CreateDto, UpdateDto> {
 
   T update(ID id, UpdateDto t);
 
-  void delete(ID id);
+  T delete(ID id);
 
   boolean isExists(ID id);
 }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
+import com.shintadev.shop_dev_app.enums.UserStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -36,6 +37,9 @@ public class User extends BaseEntity {
 
   @Column(name = "phone", length = 16, nullable = true)
   private String phone;
+
+  @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'ACTIVE'")
+  private UserStatus status;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @ToString.Exclude

@@ -4,10 +4,10 @@ spring:
   application:
     name: shop-dev-app
   datasource:
-    url: jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:shopdev}?useSSL=false&serverTimezone=UTC+7
+    url: "jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:shopdev}?useSSL=false"
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: ${DB_TYPE:mysql}
     show-sql: true
@@ -17,6 +17,9 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc:
+          serverTimezone: Asia/Ho_Chi_Minh
 logging:
   level:
     org:
