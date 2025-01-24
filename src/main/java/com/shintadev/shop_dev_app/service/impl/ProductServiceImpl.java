@@ -87,6 +87,13 @@ public class ProductServiceImpl implements ProductService {
     return products.map(this::convertToDto);
   }
 
+  @Override
+  public ProductDto findBySlug(String slug) {
+    Product product = productRepo.findBySlug(slug);
+
+    return convertToDto(product);
+  }
+
   private Product convertToEntity(ProductDto productDto) {
     return objectMapper.convertValue(productDto, Product.class);
   }

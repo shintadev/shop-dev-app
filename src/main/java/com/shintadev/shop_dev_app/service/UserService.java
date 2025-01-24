@@ -7,4 +7,5 @@ public interface UserService extends BaseService<UserDto, Long, UserDto, UserDto
 
   UserDto findByEmail(String email);
 
+  UserDto findBySlug(String slug);
 }

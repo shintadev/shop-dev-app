@@ -36,6 +36,9 @@ public class Product extends BaseEntity {
   @Column(name = "description", length = Integer.MAX_VALUE, nullable = true)
   private String description;
 
+  @Column(name = "slug", length = 128, nullable = false, unique = true)
+  private String slug;
+
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   @ToString.Exclude
   private List<ProductMedia> productMedias;

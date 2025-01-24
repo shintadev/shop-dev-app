@@ -26,8 +26,11 @@ import lombok.ToString;
 @DynamicUpdate
 public class User extends BaseEntity {
 
-  @Column(name = "name", length = 128, nullable = false)
-  private String name;
+  @Column(name = "first_name", length = 128, nullable = false)
+  private String firstName;
+
+  @Column(name = "last_name", length = 128, nullable = false)
+  private String lastName;
 
   @Column(name = "email", length = 128, nullable = false, unique = true)
   private String email;
@@ -40,6 +43,9 @@ public class User extends BaseEntity {
 
   @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'ACTIVE'")
   private UserStatus status;
+
+  @Column(name = "slug", length = 128, nullable = false, unique = true)
+  private String slug;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @ToString.Exclude

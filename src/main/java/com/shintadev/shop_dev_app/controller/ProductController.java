@@ -80,9 +80,7 @@ public class ProductController {
 
   @GetMapping("/{slug}")
   public ResponseEntity<ProductDto> getBySlug(@PathVariable String slug) {
-    // TODO: process GET request
-    return new ResponseEntity<>(HttpStatus.OK);
-    // return new ResponseEntity<>(productService.findBySlug(slug), HttpStatus.OK);
+    return new ResponseEntity<>(productService.findBySlug(slug), HttpStatus.OK);
   }
 
 }

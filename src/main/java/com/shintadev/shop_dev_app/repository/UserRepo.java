@@ -10,4 +10,6 @@ import com.shintadev.shop_dev_app.model.User;
 public interface UserRepo extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
   User findByEmail(String email);
+
+  User findBySlug(String slug);
 }

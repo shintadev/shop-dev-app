@@ -12,4 +12,6 @@ import com.shintadev.shop_dev_app.model.product.Product;
 public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
   Page<Product> findByNameLike(String name, Pageable pageable);
+
+  Product findBySlug(String slug);
 }

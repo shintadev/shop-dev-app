@@ -88,6 +88,13 @@ public class UserServiceImpl implements UserService {
     return convertToDto(user);
   }
 
+  @Override
+  public UserDto findBySlug(String slug) {
+    User user = userRepo.findBySlug(slug);
+
+    return convertToDto(user);
+  }
+
   private UserDto convertToDto(User user) {
     return objectMapper.convertValue(user, UserDto.class);
   }

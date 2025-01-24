@@ -70,8 +70,6 @@ public class UserController {
 
   @GetMapping("/{slug}")
   public ResponseEntity<UserDto> getBySlug(@PathVariable String slug) {
-    // TODO: process GET request
-    return new ResponseEntity<>(HttpStatus.OK);
-    // return new ResponseEntity<>(userService.findBySlug(slug), HttpStatus.OK);
+    return new ResponseEntity<>(userService.findBySlug(slug), HttpStatus.OK);
   }
 }

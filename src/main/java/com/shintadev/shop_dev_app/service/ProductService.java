@@ -10,4 +10,5 @@ public interface ProductService extends BaseService<ProductDto, Long, ProductDto
 
   public Page<ProductDto> findByName(String name, Pageable pageable);
 
+  public ProductDto findBySlug(String slug);
 }
