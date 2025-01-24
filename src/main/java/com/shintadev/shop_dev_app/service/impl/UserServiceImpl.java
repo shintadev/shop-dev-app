@@ -1,6 +1,5 @@
 package com.shintadev.shop_dev_app.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-  @Autowired
-  private UserRepo userRepo;
+  private final UserRepo userRepo;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
+
+  UserServiceImpl(UserRepo userRepo, ObjectMapper objectMapper) {
+    this.userRepo = userRepo;
+    this.objectMapper = objectMapper;
+  }
 
   @Override
   @Transactional

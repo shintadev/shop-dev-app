@@ -1,6 +1,5 @@
 package com.shintadev.shop_dev_app.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/users")
 public class UserController {
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
+
+  UserController(UserService userService) {
+    this.userService = userService;
+  }
 
   @PostMapping
   public ResponseEntity<UserDto> add(@RequestBody UserDto userDto) {

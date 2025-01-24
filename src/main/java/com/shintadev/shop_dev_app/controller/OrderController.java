@@ -1,6 +1,5 @@
 package com.shintadev.shop_dev_app.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +23,11 @@ import com.shintadev.shop_dev_app.service.OrderService;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-  @Autowired
-  private OrderService orderService;
+  private final OrderService orderService;
+
+  OrderController(OrderService orderService) {
+    this.orderService = orderService;
+  }
 
   @PostMapping
   public ResponseEntity<OrderDto> add(@RequestBody OrderDto orderDto) {

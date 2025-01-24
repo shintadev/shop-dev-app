@@ -1,7 +1,5 @@
 package com.shintadev.shop_dev_app.service.impl;
 
-import org.aspectj.weaver.ast.Or;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,11 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
-  @Autowired
-  private OrderRepo orderRepo;
+  private final OrderRepo orderRepo;
 
-  @Autowired
   private ObjectMapper objectMapper;
+
+  OrderServiceImpl(OrderRepo orderRepo, ObjectMapper objectMapper) {
+    this.orderRepo = orderRepo;
+    this.objectMapper = objectMapper;
+  }
 
   @Override
   @Transactional
