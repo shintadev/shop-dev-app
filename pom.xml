@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.shintadev</groupId>
 	<artifactId>shop-dev-app</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>shop-dev-app</name>
 	<description>A project for a sample shop application</description>
 	<url/>
@@ -58,6 +58,11 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<!-- Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<!-- Test -->
 		<dependency>
