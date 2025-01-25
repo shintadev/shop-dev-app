@@ -9,6 +9,7 @@ import com.shintadev.shop_dev_app.model.User;
 import com.shintadev.shop_dev_app.payload.user.UserDto;
 import com.shintadev.shop_dev_app.repository.UserRepo;
 import com.shintadev.shop_dev_app.service.UserService;
+import com.shintadev.shop_dev_app.util.StringUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public UserDto create(UserDto userDto) {
     User user = convertToEntity(userDto);
+    String slug = StringUtil.generateSlug(user);
+    user.setSlug(slug);
     User newUser = userRepo.saveAndFlush(user);
 
     return convertToDto(newUser);

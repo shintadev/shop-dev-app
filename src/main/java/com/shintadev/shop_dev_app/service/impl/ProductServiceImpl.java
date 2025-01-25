@@ -9,6 +9,7 @@ import com.shintadev.shop_dev_app.model.product.Product;
 import com.shintadev.shop_dev_app.payload.product.ProductDto;
 import com.shintadev.shop_dev_app.repository.ProductRepo;
 import com.shintadev.shop_dev_app.service.ProductService;
+import com.shintadev.shop_dev_app.util.StringUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public ProductDto create(ProductDto t) {
     Product product = convertToEntity(t);
+    String slug = StringUtil.generateSlug(product);
+    product.setSlug(slug);
     Product newProduct = productRepo.saveAndFlush(product);
 
     return convertToDto(newProduct);
