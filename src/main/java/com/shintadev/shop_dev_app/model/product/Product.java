@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -22,6 +23,7 @@ import lombok.ToString;
 @Data
 @Table(name = "products")
 @EqualsAndHashCode(callSuper = false)
+@Builder
 public class Product extends BaseEntity {
 
   @Column(name = "name", length = 128, nullable = false)

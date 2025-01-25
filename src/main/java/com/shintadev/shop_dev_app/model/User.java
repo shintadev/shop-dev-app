@@ -2,9 +2,6 @@ package com.shintadev.shop_dev_app.model;
 
 import java.util.List;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.enums.UserStatus;
 
@@ -14,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -22,8 +20,7 @@ import lombok.ToString;
 @Data
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
-@DynamicInsert
-@DynamicUpdate
+@Builder
 public class User extends BaseEntity {
 
   @Column(name = "first_name", length = 128, nullable = false)

@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -19,6 +20,7 @@ import lombok.ToString;
 @Data
 @Table(name = "orders")
 @EqualsAndHashCode(callSuper = false)
+@Builder
 public class Order extends BaseEntity {
 
   @Column(name = "total_price", nullable = false)
