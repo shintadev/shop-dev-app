@@ -20,6 +20,14 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         jdbc:
           serverTimezone: Asia/Ho_Chi_Minh
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: email-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    listener:
+      ack-mode: manual
 logging:
   level:
     org:
