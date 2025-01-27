@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.model.product;
+package com.shintadev.shop_dev_app.domain.model.product;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

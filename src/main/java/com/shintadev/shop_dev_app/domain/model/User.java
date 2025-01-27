@@ -1,9 +1,9 @@
-package com.shintadev.shop_dev_app.model;
+package com.shintadev.shop_dev_app.domain.model;
 
 import java.util.List;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.enums.UserStatus;
+import com.shintadev.shop_dev_app.domain.enums.UserStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

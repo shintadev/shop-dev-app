@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.shintadev</groupId>
 	<artifactId>shop-dev-app</artifactId>
-	<version>0.1.3-SNAPSHOT</version>
+	<version>0.1.4-SNAPSHOT</version>
 	<name>shop-dev-app</name>
 	<description>A project for a sample shop application</description>
 	<url/>

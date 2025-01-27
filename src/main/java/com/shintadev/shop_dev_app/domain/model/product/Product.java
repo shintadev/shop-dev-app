@@ -1,9 +1,9 @@
-package com.shintadev.shop_dev_app.model.product;
+package com.shintadev.shop_dev_app.domain.model.product;
 
 import java.util.List;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.model.Order;
+import com.shintadev.shop_dev_app.domain.model.Order;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

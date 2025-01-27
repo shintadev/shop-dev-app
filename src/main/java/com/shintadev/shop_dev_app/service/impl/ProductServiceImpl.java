@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shintadev.shop_dev_app.model.product.Product;
+import com.shintadev.shop_dev_app.domain.model.product.Product;
 import com.shintadev.shop_dev_app.payload.product.ProductDto;
 import com.shintadev.shop_dev_app.repository.ProductRepo;
 import com.shintadev.shop_dev_app.service.ProductService;
