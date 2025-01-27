@@ -3,6 +3,7 @@ package com.shintadev.shop_dev_app.domain.model;
 import java.util.List;
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.model.product.Product;
+import com.shintadev.shop_dev_app.domain.model.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shintadev.shop_dev_app.domain.model.User;
+import com.shintadev.shop_dev_app.domain.model.user.User;
 import com.shintadev.shop_dev_app.payload.user.UserDto;
 import com.shintadev.shop_dev_app.repository.UserRepo;
 import com.shintadev.shop_dev_app.service.RedisService;

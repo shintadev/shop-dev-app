@@ -1,6 +1,7 @@
 package com.shintadev.shop_dev_app.base;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -28,12 +29,12 @@ public abstract class BaseEntity implements SoftDeletable {
   @CreationTimestamp
   @Temporal(TemporalType.DATE)
   @Column(name = "create_at", updatable = false)
-  private Date createAt;
+  private LocalDateTime createAt;
 
   @UpdateTimestamp
   @Temporal(TemporalType.DATE)
   @Column(name = "update_at")
-  private Date updateAt;
+  private LocalDateTime updateAt;
 
   @Column(nullable = false, columnDefinition = "boolean default false")
   private boolean deleted;

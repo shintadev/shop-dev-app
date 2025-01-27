@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.shintadev</groupId>
 	<artifactId>shop-dev-app</artifactId>
-	<version>0.1.4-SNAPSHOT</version>
+	<version>0.1.5-SNAPSHOT</version>
 	<name>shop-dev-app</name>
 	<description>A project for a sample shop application</description>
 	<url/>
@@ -56,6 +56,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 	<!-- Data JPA -->
 		<dependency>

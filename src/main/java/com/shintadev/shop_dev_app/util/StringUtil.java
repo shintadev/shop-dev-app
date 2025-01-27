@@ -4,8 +4,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import com.shintadev.shop_dev_app.domain.model.User;
 import com.shintadev.shop_dev_app.domain.model.product.Product;
+import com.shintadev.shop_dev_app.domain.model.user.User;
 
 @Component
 public class StringUtil {
