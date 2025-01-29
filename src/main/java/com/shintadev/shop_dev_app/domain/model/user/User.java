@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Addre
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.enums.UserStatus;
-import com.shintadev.shop_dev_app.domain.model.Order;
+import com.shintadev.shop_dev_app.domain.model.order.Order;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shintadev.shop_dev_app.domain.model.Order;
+import com.shintadev.shop_dev_app.domain.model.order.Order;
 import com.shintadev.shop_dev_app.payload.order.OrderDto;
 import com.shintadev.shop_dev_app.repository.OrderRepo;
 import com.shintadev.shop_dev_app.service.OrderService;

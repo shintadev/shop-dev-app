@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.domain.model.Order;
+import com.shintadev.shop_dev_app.domain.model.order.Order;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
