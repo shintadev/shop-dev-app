@@ -1,7 +1,7 @@
 package com.shintadev.shop_dev_app.domain.enums;
 
-public enum UserStatus {
+public enum ProductStatus {
   ACTIVE,
   INACTIVE,
-  SUSPENDED
+  OUT_OF_STOCK
 }

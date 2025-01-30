@@ -2,29 +2,33 @@ package com.shintadev.shop_dev_app.domain.model.product;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.domain.model.order.Order;
-
-import jakarta.persistence.CascadeType;
+import com.shintadev.shop_dev_app.domain.enums.ProductStatus;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Entity
 @Data
-@Table(name = "products")
+@Table(name = "products",
+    indexes = {
+        @Index(name = "idx_product_slug", columnList = "slug"),
+        @Index(name = "idx_product_category_id", columnList = "category_id"),
+        @Index(name = "idx_product_status", columnList = "status")
+    })
 @EqualsAndHashCode(callSuper = false)
 @Builder
 public class Product extends BaseEntity {
@@ -49,12 +53,19 @@ public class Product extends BaseEntity {
   @Column(name = "slug", length = 128, nullable = false, unique = true)
   private String slug;
 
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  @ToString.Exclude
-  private List<ProductMedia> productMedias;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  private Category category;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @ToString.Exclude
-  @JoinTable(name = "product_orders", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "order_id"))
-  private List<Order> orders;
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'ACTIVE'")
+  private ProductStatus status;
+
+  @ElementCollection
+  @CollectionTable(
+      name = "product_images",
+      joinColumns = @JoinColumn(name = "product_id")
+  )
+  private List<String> imageUrls;
 }

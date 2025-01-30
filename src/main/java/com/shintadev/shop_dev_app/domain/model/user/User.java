@@ -1,7 +1,6 @@
 package com.shintadev.shop_dev_app.domain.model.user;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
@@ -13,7 +12,10 @@ import com.shintadev.shop_dev_app.domain.model.order.Order;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +26,11 @@ import lombok.ToString;
 
 @Entity
 @Data
-@Table(name = "users")
+@Table(name = "users",
+    indexes = {
+        @Index(name = "idx_user_email", columnList = "email", unique = true),
+        @Index(name = "idx_user_slug", columnList = "slug")
+    })
 @EqualsAndHashCode(callSuper = true)
 @Builder
 public class User extends BaseEntity {
@@ -44,6 +50,7 @@ public class User extends BaseEntity {
   @Column(name = "phone", length = 16, nullable = true)
   private String phone;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'ACTIVE'")
   private UserStatus status;
 

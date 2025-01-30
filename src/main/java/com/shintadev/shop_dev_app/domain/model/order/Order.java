@@ -1,36 +1,40 @@
 package com.shintadev.shop_dev_app.domain.model.order;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import org.apache.kafka.common.protocol.types.Field.Str;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.enums.OrderStatus;
-import com.shintadev.shop_dev_app.domain.model.product.Product;
+import com.shintadev.shop_dev_app.domain.model.Payment;
+import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Entity
 @Data
-@Table(name = "orders")
+@Table(name = "orders",
+    indexes = {
+        @Index(name = "idx_order_user", columnList = "user_id"),
+        @Index(name = "idx_order_status", columnList = "status"),
+        @Index(name = "idx_order_created_at", columnList = "created_at")
+    })
 @EqualsAndHashCode(callSuper = false)
 @Builder
 public class Order extends BaseEntity {
@@ -43,6 +47,9 @@ public class Order extends BaseEntity {
   @Column(name = "total_price", nullable = false)
   private double totalPrice;
   
+  @Embedded
+  private Address address;
+
   @NotNull
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'PENDING'")
@@ -53,7 +60,8 @@ public class Order extends BaseEntity {
   private User user;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-  @ToString.Exclude
   private Set<OrderItem> orderItems = new HashSet<>();
 
+  @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Payment payment;
 }

@@ -15,11 +15,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "order_items")
+@Builder
 public class OrderItem {
 
   @Id
