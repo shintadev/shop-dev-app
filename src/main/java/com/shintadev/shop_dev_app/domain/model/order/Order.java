@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.enums.OrderStatus;
-import com.shintadev.shop_dev_app.domain.model.Payment;
 import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 

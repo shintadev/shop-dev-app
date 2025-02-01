@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shintadev.shop_dev_app.domain.model.product.Product;
 import com.shintadev.shop_dev_app.payload.product.ProductDto;
-import com.shintadev.shop_dev_app.repository.ProductRepo;
+import com.shintadev.shop_dev_app.repository.product.ProductRepo;
 import com.shintadev.shop_dev_app.service.ProductService;
 import com.shintadev.shop_dev_app.service.RedisService;
 import com.shintadev.shop_dev_app.util.StringUtil;
