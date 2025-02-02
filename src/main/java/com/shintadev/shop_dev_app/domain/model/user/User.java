@@ -6,7 +6,7 @@ import java.util.Set;
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.domain.enums.UserStatus;
+import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
 import com.shintadev.shop_dev_app.domain.model.order.Order;
 
 import jakarta.persistence.CascadeType;
@@ -58,9 +58,11 @@ public class User extends BaseEntity {
   private String slug;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
   private Set<Address> addresses = new HashSet<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @ToString.Exclude
+  @Builder.Default
   private Set<Order> orders = new HashSet<>();
 }

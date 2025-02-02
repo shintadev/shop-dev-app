@@ -1,8 +1,8 @@
 package com.shintadev.shop_dev_app.domain.model.order;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.domain.enums.PaymentMethod;
-import com.shintadev.shop_dev_app.domain.enums.PaymentStatus;
+import com.shintadev.shop_dev_app.domain.enums.order.PaymentMethod;
+import com.shintadev.shop_dev_app.domain.enums.order.PaymentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

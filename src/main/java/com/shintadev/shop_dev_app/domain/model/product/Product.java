@@ -3,7 +3,8 @@ package com.shintadev.shop_dev_app.domain.model.product;
 import java.math.BigDecimal;
 import java.util.List;
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.domain.enums.ProductStatus;
+import com.shintadev.shop_dev_app.domain.enums.product.ProductStatus;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -25,7 +26,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Table(name = "products",
     indexes = {
-        @Index(name = "idx_product_slug", columnList = "slug"),
+				@Index(name = "idx_product_slug", columnList = "slug"),
         @Index(name = "idx_product_category_id", columnList = "category_id"),
         @Index(name = "idx_product_status", columnList = "status")
     })

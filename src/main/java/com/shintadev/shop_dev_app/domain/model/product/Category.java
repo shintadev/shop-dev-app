@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,6 +21,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Table(name = "categories")
 @EqualsAndHashCode(callSuper = false)
+@Builder
 public class Category extends BaseEntity{
 
   @NotNull
@@ -31,8 +33,10 @@ public class Category extends BaseEntity{
   private Category parent;
 
   @OneToMany(mappedBy = "parent")
+  @Builder.Default
   private Set<Category> subcategories = new HashSet<>();
 
   @OneToMany(mappedBy = "category")
+  @Builder.Default
   private Set<Product> products = new HashSet<>();
 }

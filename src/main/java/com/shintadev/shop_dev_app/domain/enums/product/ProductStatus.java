@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.domain.enums;
+package com.shintadev.shop_dev_app.domain.enums.product;
 
 public enum ProductStatus {
   ACTIVE,

@@ -15,10 +15,12 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
 @Table(name = "carts")
+@EqualsAndHashCode(callSuper = false)
 @Builder
 public class Cart extends BaseEntity{
 
@@ -27,5 +29,6 @@ public class Cart extends BaseEntity{
   private User user;
 
   @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
   private Set<CartItem> cartItems = new HashSet<>();
 }

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
-import com.shintadev.shop_dev_app.domain.enums.OrderStatus;
+import com.shintadev.shop_dev_app.domain.enums.order.OrderStatus;
 import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 
@@ -59,6 +59,7 @@ public class Order extends BaseEntity {
   private User user;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
   private Set<OrderItem> orderItems = new HashSet<>();
 
   @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
