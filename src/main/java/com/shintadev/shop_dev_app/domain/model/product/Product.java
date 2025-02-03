@@ -54,9 +54,8 @@ public class Product extends BaseEntity {
   @Column(name = "slug", length = 128, nullable = false, unique = true)
   private String slug;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
-  private Category category;
+  @Column(name = "category", length = 128, nullable = false)
+  private String category;
 
   @NotNull
   @Enumerated(EnumType.STRING)

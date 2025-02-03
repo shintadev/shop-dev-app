@@ -11,36 +11,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.payload.product.ProductDto;
+import com.shintadev.shop_dev_app.domain.dto.request.ProductRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.ProductResponse;
 import com.shintadev.shop_dev_app.service.ProductService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
 
   private final ProductService productService;
 
-  ProductController(ProductService productService) {
-    this.productService = productService;
-  }
-
   @PostMapping
-  public ResponseEntity<ProductDto> add(@RequestBody ProductDto productDto) {
-    return new ResponseEntity<>(productService.create(productDto), HttpStatus.CREATED);
+  public ResponseEntity<ProductResponse> add(@RequestBody ProductRequest request) {
+    return new ResponseEntity<>(productService.create(request), HttpStatus.CREATED);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<ProductDto> getById(@PathVariable String id) {
+  @GetMapping("/id/{id}")
+  public ResponseEntity<ProductResponse> getById(@PathVariable String id) {
     return new ResponseEntity<>(productService.findOne(Long.parseLong(id)), HttpStatus.OK);
   }
 
   @GetMapping
-  public ResponseEntity<Page<ProductDto>> getAll(
+  public ResponseEntity<Page<ProductResponse>> getAll(
       @RequestParam int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "id") String sort,
@@ -53,9 +54,9 @@ public class ProductController {
     return new ResponseEntity<>(productService.findAll(pageable), HttpStatus.OK);
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<ProductDto> update(@PathVariable String id, @RequestBody ProductDto productDto) {
-    return new ResponseEntity<>(productService.update(Long.parseLong(id), productDto), HttpStatus.OK);
+  @PutMapping("/{id}")
+  public ResponseEntity<ProductResponse> update(@PathVariable String id, @RequestBody ProductRequest request) {
+    return new ResponseEntity<>(productService.update(Long.parseLong(id), request), HttpStatus.OK);
   }
 
   @DeleteMapping("/{id}")
@@ -65,8 +66,8 @@ public class ProductController {
     return new ResponseEntity<>(id, HttpStatus.OK);
   }
 
-  @GetMapping("/{name}")
-  public ResponseEntity<Page<ProductDto>> getByName(
+  @GetMapping("/name/{name}")
+  public ResponseEntity<Page<ProductResponse>> getByName(
       @PathVariable String name,
       @RequestParam int page,
       @RequestParam(defaultValue = "10") int size,
@@ -81,7 +82,7 @@ public class ProductController {
   }
 
   @GetMapping("/{slug}")
-  public ResponseEntity<ProductDto> getBySlug(@PathVariable String slug) {
+  public ResponseEntity<ProductResponse> getBySlug(@PathVariable String slug) {
     return new ResponseEntity<>(productService.findBySlug(slug), HttpStatus.OK);
   }
 

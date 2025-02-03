@@ -35,8 +35,4 @@ public class Category extends BaseEntity{
   @OneToMany(mappedBy = "parent")
   @Builder.Default
   private Set<Category> subcategories = new HashSet<>();
-
-  @OneToMany(mappedBy = "category")
-  @Builder.Default
-  private Set<Product> products = new HashSet<>();
 }

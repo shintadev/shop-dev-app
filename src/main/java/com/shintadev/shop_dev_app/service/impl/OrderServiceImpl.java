@@ -65,16 +65,14 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   @Transactional
-  public OrderDto delete(Long id) {
+  public void delete(Long id) {
     Order order = orderRepo.findById(id).orElse(null);
     if (order == null) {
-      return null;
+      return;
     }
 
     order.setDeleted(true);
-    Order deletedOrder = orderRepo.saveAndFlush(order);
-
-    return convertToDto(deletedOrder);
+    orderRepo.saveAndFlush(order);
   }
 
   @Override
