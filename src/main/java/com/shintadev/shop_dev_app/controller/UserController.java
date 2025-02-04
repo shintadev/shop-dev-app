@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.payload.user.UserDto;
+import com.shintadev.shop_dev_app.domain.dto.request.UserProfileUpdateRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
 import com.shintadev.shop_dev_app.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,26 +26,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
   private final UserService userService;
 
-  UserController(UserService userService) {
-    this.userService = userService;
-  }
-
   @PostMapping
-  public ResponseEntity<UserDto> add(@RequestBody UserDto userDto) {
-    return new ResponseEntity<>(userService.create(userDto), HttpStatus.CREATED);
+  public ResponseEntity<UserResponse> add(@RequestBody UserRequest request) {
+    return new ResponseEntity<>(userService.create(request), HttpStatus.CREATED);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<UserDto> getById(@PathVariable String id) {
+  public ResponseEntity<UserResponse> getById(@PathVariable String id) {
     return new ResponseEntity<>(userService.findOne(Long.parseLong(id)), HttpStatus.OK);
   }
 
   @GetMapping
-  public ResponseEntity<Page<UserDto>> getAll(
+  public ResponseEntity<Page<UserResponse>> getAll(
       @RequestParam int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "id") String sort,
@@ -54,8 +55,8 @@ public class UserController {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<UserDto> update(@PathVariable String id, @RequestBody UserDto userDto) {
-    return new ResponseEntity<>(userService.update(Long.parseLong(id), userDto), HttpStatus.OK);
+  public ResponseEntity<UserResponse> update(@PathVariable String id, @RequestBody UserProfileUpdateRequest request) {
+    return new ResponseEntity<>(userService.update(Long.parseLong(id), request), HttpStatus.OK);
   }
 
   @DeleteMapping("/{id}")
@@ -66,12 +67,12 @@ public class UserController {
   }
 
   @GetMapping("/{email}")
-  public ResponseEntity<UserDto> getByEmail(@PathVariable String email) {
+  public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
     return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
   }
 
   @GetMapping("/{slug}")
-  public ResponseEntity<UserDto> getBySlug(@PathVariable String slug) {
+  public ResponseEntity<UserResponse> getBySlug(@PathVariable String slug) {
     return new ResponseEntity<>(userService.findBySlug(slug), HttpStatus.OK);
   }
 }

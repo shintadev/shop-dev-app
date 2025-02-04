@@ -1,57 +1,93 @@
 package com.shintadev.shop_dev_app.service.impl;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shintadev.shop_dev_app.domain.dto.request.AddressRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.UserProfileUpdateRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.AddressResponse;
+import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
+import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
+import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
-import com.shintadev.shop_dev_app.payload.user.UserDto;
+import com.shintadev.shop_dev_app.mapper.UserMapper;
 import com.shintadev.shop_dev_app.repository.user.UserRepo;
 import com.shintadev.shop_dev_app.service.RedisService;
 import com.shintadev.shop_dev_app.service.UserService;
 import com.shintadev.shop_dev_app.util.StringUtil;
 
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
   private final UserRepo userRepo;
 
-  private final ObjectMapper objectMapper;
+  private final UserMapper userMapper;
 
   private final RedisService redisService;
 
-  UserServiceImpl(
-    UserRepo userRepo, 
-    ObjectMapper objectMapper,
-    RedisService redisService) {
-    this.userRepo = userRepo;
-    this.objectMapper = objectMapper;
-    this.redisService = redisService;
-  }
-
+  /* CREATE */
   @Override
-  @Transactional
-  public UserDto create(UserDto userDto) {
-    User user = convertToEntity(userDto);
+  public UserResponse create(UserRequest request) {
+    if (userRepo.existsByEmail(request.getEmail())) {
+      log.error("Email {} already exists", request.getEmail());
+      throw new IllegalArgumentException("Email already in use");
+    }
+
+    User user = userMapper.toEntity(request);
     String slug = StringUtil.generateSlug(user);
     user.setSlug(slug);
-    User newUser = userRepo.saveAndFlush(user);
+    user.setStatus(UserStatus.ACTIVE);
 
-    return convertToDto(newUser);
+    User savedUser = userRepo.saveAndFlush(user);
+
+    // TODO: Publish event to Kafka
+
+    return userMapper.toResponse(savedUser);
   }
 
   @Override
-  public Page<UserDto> findAll(Pageable pageable) {
+  public UserResponse addAddress(Long id, AddressRequest request) {
+    User user = userRepo.findByIdForUpdate(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+
+    Address address = userMapper.toEntity(request);
+
+    // Ensure only one default address
+    if (Boolean.TRUE.equals(request.isDefault())) {
+      user.getAddresses().forEach(a -> a.setDefault(false));
+    }
+
+    user.getAddresses().add(address);
+    address.setUser(user);
+
+    User updatedUser = userRepo.saveAndFlush(user);
+
+    return userMapper.toResponse(updatedUser);
+  }
+
+  /* READ */
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<UserResponse> findAll(Pageable pageable) {
     // Check if the users are in Redis
     String key = "users_" + pageable.getPageNumber();
-    Page<UserDto> usersFromRedis = redisService.getObject(key, Page.class);
+    Page<UserResponse> usersFromRedis = redisService.getObject(key, Page.class);
     if (usersFromRedis != null) {
       log.info("Users found in Redis");
       return usersFromRedis;
@@ -64,106 +100,163 @@ public class UserServiceImpl implements UserService {
     redisService.setObject(key, users);
     redisService.getRedisTemplate().expire(key, 1, TimeUnit.HOURS);
 
-    return users.map(this::convertToDto);
+    return users.map(userMapper::toResponse);
   }
 
   @Override
-  public UserDto findOne(Long id) {
+  @Transactional(readOnly = true)
+  public UserResponse findOne(Long id) {
     // Check if the user is in Redis
     String key = "user_" + id;
-    UserDto userFromRedis = redisService.getObject(key, UserDto.class);
+    UserResponse userFromRedis = redisService.getObject(key, UserResponse.class);
     if (userFromRedis != null) {
       log.info("User found in Redis");
       return userFromRedis;
     }
 
     // If not found in Redis, get from database
-    User user = userRepo.findById(id).orElse(null);
+    User user = userRepo.findById(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + id));
 
     // Save to Redis
     redisService.setObject(key, user);
     redisService.getRedisTemplate().expire(key, 1, TimeUnit.HOURS);
 
-    return convertToDto(user);
+    return userMapper.toResponse(user);
   }
 
   @Override
-  @Transactional
-  public UserDto update(Long id, UserDto userDto) {
-    if (!isExists(id)) {
-      return null;
-    }
-
-    User user = convertToEntity(userDto);
-    user.setId(id);
-    User updatedUser = userRepo.saveAndFlush(user);
-
-    return convertToDto(updatedUser);
-  }
-
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    User user = userRepo.findById(id).orElse(null);
-    if (user == null) {
-      log.error("User with id {} not found", id);
-      return;
-    }
-
-    user.setDeleted(true);
-    userRepo.saveAndFlush(user);
-  }
-
-  @Override
-  public boolean isExists(Long id) {
-    return userRepo.existsById(id);
-  }
-
-  @Override
-  public UserDto findByEmail(String email) {
+  @Transactional(readOnly = true)
+  public UserResponse findByEmail(String email) {
     // Check if the user is in Redis
     String key = "user_" + email;
-    UserDto userFromRedis = redisService.getObject(key, UserDto.class);
+    UserResponse userFromRedis = redisService.getObject(key, UserResponse.class);
     if (userFromRedis != null) {
       log.info("User found in Redis");
       return userFromRedis;
     }
 
     // If not found in Redis, get from database
-    User user = userRepo.findByEmail(email);
+    User user = userRepo.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found with email " + email));
 
     // Save to Redis
     redisService.setObject(key, user);
     redisService.getRedisTemplate().expire(key, 1, TimeUnit.HOURS);
 
-    return convertToDto(user);
+    return userMapper.toResponse(user);
   }
 
   @Override
-  public UserDto findBySlug(String slug) {
+  @Transactional(readOnly = true)
+  public UserResponse findBySlug(String slug) {
     // Check if the user is in Redis
     String key = "user_" + slug;
-    UserDto userFromRedis = redisService.getObject(key, UserDto.class);
+    UserResponse userFromRedis = redisService.getObject(key, UserResponse.class);
     if (userFromRedis != null) {
       log.info("User found in Redis");
       return userFromRedis;
     }
 
     // If not found in Redis, get from database
-    User user = userRepo.findBySlug(slug);
+    User user = userRepo.findBySlug(slug)
+        .orElseThrow(() -> new RuntimeException("User not found with slug " + slug));
 
     // Save to Redis
     redisService.setObject(key, user);
     redisService.getRedisTemplate().expire(key, 1, TimeUnit.HOURS);
     
-    return convertToDto(user);
+    return userMapper.toResponse(user);
   }
 
-  private UserDto convertToDto(User user) {
-    return objectMapper.convertValue(user, UserDto.class);
+  @Override
+  @Transactional(readOnly = true)
+  public List<AddressResponse> findUserAddresses(Long userId) {
+    User user = userRepo.findById(userId)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+
+    return user.getAddresses().stream()
+        .map(userMapper::toResponse)
+        .collect(Collectors.toList());
   }
 
-  private User convertToEntity(UserDto userDto) {
-    return objectMapper.convertValue(userDto, User.class);
+  /* UPDATE */
+
+  @Override
+  public UserResponse update(Long id, UserProfileUpdateRequest userDto) {
+    User existingUser = userRepo.findByIdForUpdate(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+
+    userMapper.updateFromRequest(userDto, existingUser);
+    String slug = StringUtil.generateSlug(existingUser);
+    existingUser.setSlug(slug);
+
+    // TODO: Update firebase
+
+    User updatedUser = userRepo.saveAndFlush(existingUser);
+
+    // TODO: Send message to Kafka
+
+    return userMapper.toResponse(updatedUser);
+  }
+
+  @Override
+  public UserResponse updateAddress(Long userId, Long addressId, AddressRequest request) {
+    User user = userRepo.findByIdForUpdate(userId)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+
+    Address address = user.getAddresses().stream()
+        .filter(a -> a.getId().equals(addressId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Address not found with id " + addressId));
+
+    userMapper.updateFromRequest(request, address);
+
+    // Ensure only one default address
+    if (Boolean.TRUE.equals(request.isDefault())) {
+      user.getAddresses().forEach(a -> {
+        if (!a.getId().equals(addressId)) {
+          a.setDefault(false);
+        }
+      });
+    }
+
+    User updatedUser = userRepo.saveAndFlush(user);
+
+    return userMapper.toResponse(updatedUser);
+  }
+
+  /* DELETE */
+
+  @Override
+  public void delete(Long id) {
+    User user = userRepo.findByIdForUpdate(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+
+    user.setStatus(UserStatus.INACTIVE);
+    user.setDeleted(true);
+    userRepo.saveAndFlush(user);
+
+    // TODO: Send message to Kafka
+  }
+
+  @Override
+  public void deleteAddress(Long userId, Long addressId) {
+    User user = userRepo.findByIdForUpdate(userId)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+
+    Address address = user.getAddresses().stream()
+        .filter(a -> a.getId().equals(addressId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Address not found with id " + addressId));
+
+    user.getAddresses().remove(address);
+    userRepo.saveAndFlush(user);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public boolean isExists(Long id) {
+    return userRepo.existsById(id);
   }
 }

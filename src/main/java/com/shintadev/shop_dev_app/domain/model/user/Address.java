@@ -15,13 +15,13 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "address")
+@Table(name = "addresses")
 @Builder
 public class Address {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @NotNull
   @Column(name = "street", length = 255, nullable = false)
@@ -38,6 +38,10 @@ public class Address {
   @NotNull
   @Column(name = "postal_code", length = 16, nullable = false)
   private String postalCode;
+
+  @NotNull
+  @Column(name = "phone", length = 16, nullable = false)
+  private String phone;
 
   @Column(name = "is_default", nullable = false, columnDefinition = "boolean default false")
   private boolean isDefault;

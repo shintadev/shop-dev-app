@@ -1,15 +1,12 @@
 package com.shintadev.shop_dev_app.service.impl;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.Mapping;
-
 import com.shintadev.shop_dev_app.domain.dto.request.ProductFilterRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.ProductRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.ProductResponse;

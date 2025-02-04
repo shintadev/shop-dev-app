@@ -8,7 +8,7 @@ import com.shintadev.shop_dev_app.domain.dto.request.ProductFilterRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.ProductRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.ProductResponse;
 
-public interface ProductService extends BaseService<ProductResponse, Long, ProductRequest> {
+public interface ProductService extends BaseService<ProductResponse, Long, ProductRequest, ProductRequest> {
 
   Page<ProductResponse> findByFilter(ProductFilterRequest request, Pageable pageable);
 

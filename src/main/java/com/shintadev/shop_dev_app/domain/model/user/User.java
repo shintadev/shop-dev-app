@@ -3,8 +3,6 @@ package com.shintadev.shop_dev_app.domain.model.user;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
-
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
 import com.shintadev.shop_dev_app.domain.model.order.Order;
@@ -36,11 +34,11 @@ import lombok.ToString;
 public class User extends BaseEntity {
 
   @NotNull
-  @Column(name = "first_name", length = 128, nullable = false)
+  @Column(name = "first_name", length = 100, nullable = false)
   private String firstName;
 
   @NotNull
-  @Column(name = "last_name", length = 128, nullable = false)
+  @Column(name = "last_name", length = 100, nullable = false)
   private String lastName;
 
   @NotNull
@@ -56,6 +54,12 @@ public class User extends BaseEntity {
 
   @Column(name = "slug", length = 128, nullable = false, unique = true)
   private String slug;
+
+  @Column(name = "avatar_url", length = 256, nullable = true)
+  private String avatarUrl;
+
+  @Column(name = "firebase_uid", length = 128, nullable = true)
+  private String firebaseUid;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
