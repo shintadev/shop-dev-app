@@ -3,7 +3,6 @@ package com.shintadev.shop_dev_app.repository.product;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import org.apache.kafka.common.quota.ClientQuotaAlteration.Op;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

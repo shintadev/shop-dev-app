@@ -1,6 +1,5 @@
 package com.shintadev.shop_dev_app.base;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
