@@ -28,6 +28,11 @@ spring:
       enable-auto-commit: false
     listener:
       ack-mode: manual
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://securetoken.google.com/${firebase.project-id}
 logging:
   level:
     org:

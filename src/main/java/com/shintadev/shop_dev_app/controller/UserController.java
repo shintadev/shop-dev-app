@@ -6,15 +6,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.domain.dto.request.UserProfileUpdateRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.AddressRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.AddressResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
+import com.shintadev.shop_dev_app.payload.user.UserDto;
 import com.shintadev.shop_dev_app.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,19 +31,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
   private final UserService userService;
 
-  @PostMapping
-  public ResponseEntity<UserResponse> add(@RequestBody UserRequest request) {
+  @PostMapping("/register")
+  public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest request) {
     return new ResponseEntity<>(userService.create(request), HttpStatus.CREATED);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<UserResponse> getById(@PathVariable String id) {
-    return new ResponseEntity<>(userService.findOne(Long.parseLong(id)), HttpStatus.OK);
-  }
+  // @GetMapping("/{id}")
+  // public ResponseEntity<UserDto> getById(@PathVariable String id) {
+  // return new ResponseEntity<>(userService.findOne(Long.parseLong(id)),
+  // HttpStatus.OK);
+  // }
 
   @GetMapping
   public ResponseEntity<Page<UserResponse>> getAll(
@@ -54,10 +60,12 @@ public class UserController {
     return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<UserResponse> update(@PathVariable String id, @RequestBody UserProfileUpdateRequest request) {
-    return new ResponseEntity<>(userService.update(Long.parseLong(id), request), HttpStatus.OK);
-  }
+  // @PatchMapping("/{id}")
+  // public ResponseEntity<UserResponse> update(@PathVariable String id,
+  // @RequestBody UserDto userDto) {
+  // return new ResponseEntity<>(userService.update(Long.parseLong(id), userDto),
+  // HttpStatus.OK);
+  // }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<String> delete(@PathVariable String id) {
@@ -66,13 +74,19 @@ public class UserController {
     return new ResponseEntity<>(id, HttpStatus.OK);
   }
 
-  @GetMapping("/{email}")
-  public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
-    return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
-  }
+  // @GetMapping("/{email}")
+  // public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
+  // return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
+  // }
 
   @GetMapping("/{slug}")
   public ResponseEntity<UserResponse> getBySlug(@PathVariable String slug) {
     return new ResponseEntity<>(userService.findBySlug(slug), HttpStatus.OK);
   }
+
+  // @PostMapping("/address")
+  // public ResponseEntity<UserResponse> getByAddress(@PathVariable AddressRequest
+  // request) {
+  // return new ResponseEntity<>(userService.addAddress(request), HttpStatus.OK);
+  // }
 }

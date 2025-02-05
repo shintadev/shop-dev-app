@@ -2,7 +2,6 @@ package com.shintadev.shop_dev_app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.shintadev.shop_dev_app.filter.FirebaseAuthFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity(jsr250Enabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+  private final FirebaseAuthFilter firebaseAuthFilter;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -40,31 +44,22 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-    // httpSecurity.formLogin((formLogin) -> formLogin
-    // .loginPage("/login")
-    // .loginProcessingUrl("/login")
-    // .defaultSuccessUrl("/home", true)
-    // .failureUrl("/login?error=true")
-    // .permitAll());
-
-    // httpSecurity.logout((logout) -> logout
-    // .logoutUrl("/logout")
-    // .logoutSuccessUrl("/login")
-    // .permitAll());
-
-    // httpSecurity.authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-    // .requestMatchers("/login").permitAll()
-    // .requestMatchers("/register").permitAll()
-    // .requestMatchers("/home").authenticated()
-    // .requestMatchers("/admin").hasRole("ADMIN")
-    // .anyRequest().authenticated());
-
     httpSecurity
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(firebaseAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-            .anyRequest().authenticated());
+            // Public endpoints
+            .requestMatchers("/api/auth/register").permitAll()
+            .requestMatchers("/api/auth/reset-password").permitAll()
+            .requestMatchers("/api/products/**").permitAll()
+
+            // Secured endpoints
+            .requestMatchers("/api/users/**").authenticated()
+            .requestMatchers("/api/orders/**").authenticated()
+
+            // Admin-only endpoints
+            .requestMatchers("/api/admin/**").hasRole("ADMIN"));
 
     return httpSecurity.build();
   }
