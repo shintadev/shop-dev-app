@@ -6,12 +6,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -27,20 +21,20 @@ public class SecurityConfig {
 
   private final FirebaseAuthFilter firebaseAuthFilter;
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder() {
-      @Override
-      public String encode(CharSequence rawPassword) {
-        return rawPassword.toString();
-      }
+  // @Bean
+  // public PasswordEncoder passwordEncoder() {
+  // return new BCryptPasswordEncoder() {
+  // @Override
+  // public String encode(CharSequence rawPassword) {
+  // return rawPassword.toString();
+  // }
 
-      @Override
-      public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return rawPassword.toString().equals(encodedPassword);
-      }
-    };
-  }
+  // @Override
+  // public boolean matches(CharSequence rawPassword, String encodedPassword) {
+  // return rawPassword.toString().equals(encodedPassword);
+  // }
+  // };
+  // }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -50,8 +44,7 @@ public class SecurityConfig {
         .addFilterBefore(firebaseAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
             // Public endpoints
-            .requestMatchers("/api/auth/register").permitAll()
-            .requestMatchers("/api/auth/reset-password").permitAll()
+            .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/products/**").permitAll()
 
             // Secured endpoints
@@ -59,26 +52,27 @@ public class SecurityConfig {
             .requestMatchers("/api/orders/**").authenticated()
 
             // Admin-only endpoints
-            .requestMatchers("/api/admin/**").hasRole("ADMIN"));
+            .requestMatchers("/api/admin/**").hasRole("ADMIN"))
+        .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/api/auth/login", true));
 
     return httpSecurity.build();
   }
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails admin = User.builder()
-        .username("admin")
-        .password(passwordEncoder().encode("admin"))
-        .roles("ADMIN", "USER")
-        // .authorities("CAN_READ", "CAN_WRITE")
-        .build();
+  // @Bean
+  // public UserDetailsService userDetailsService() {
+  // UserDetails admin = User.builder()
+  // .username("admin")
+  // .password(passwordEncoder().encode("admin"))
+  // .roles("ADMIN", "USER")
+  // // .authorities("CAN_READ", "CAN_WRITE")
+  // .build();
 
-    UserDetails user = User.builder()
-        .username("user")
-        .password(passwordEncoder().encode("user"))
-        .roles("USER")
-        .build();
+  // UserDetails user = User.builder()
+  // .username("user")
+  // .password(passwordEncoder().encode("user"))
+  // .roles("USER")
+  // .build();
 
-    return new InMemoryUserDetailsManager(admin, user);
-  }
+  // return new InMemoryUserDetailsManager(admin, user);
+  // }
 }
