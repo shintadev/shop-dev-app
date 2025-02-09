@@ -1,13 +1,14 @@
 package com.shintadev.shop_dev_app.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import org.springframework.http.HttpStatus;
-
+@Data
 @ResponseStatus(HttpStatus.NOT_FOUND)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class ResourceNotFoundException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;

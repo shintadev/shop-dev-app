@@ -4,7 +4,7 @@ import com.shintadev.shop_dev_app.domain.model.user.User;
 
 public interface AuthService {
 
-  String authenticateGoogleUser(String idToken);
+  // String authenticateGoogleUser(String idToken);
 
-  User getCurrentUser();
+  // User getCurrentUser();
 }

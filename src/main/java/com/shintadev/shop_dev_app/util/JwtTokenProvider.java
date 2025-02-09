@@ -1,15 +1,14 @@
 package com.shintadev.shop_dev_app.util;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.google.api.client.util.Value;
@@ -24,31 +23,29 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class JwtTokenProvider {
 
-  @Value("${security.jwt.secret:secret}")
+  @Value("${security.jwt.secret}")
   private String secret;
 
-  @Value("${security.jwt.expire-length:3600000}") // 1 hour
+  @Value("${security.jwt.expiration-in-ms}")
   private long validityInMilliseconds;
 
   private SecretKey secretKey;
 
   @PostConstruct
   protected void init() {
-    secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
   }
 
-  public String createToken(String username, List<String> roles) {
-    Claims claims = Jwts.claims().setSubject(username);
-    claims.put("roles", roles);
+  public String createToken(UserDetails userDetails) {
+    Map<String, Object> claims = new HashMap<>();
 
-    Date now = new Date();
-    Date validity = new Date(now.getTime() + validityInMilliseconds);
+    long now = System.currentTimeMillis();
 
-    return Jwts.builder() //
-        .setClaims(claims) //
-        .setIssuedAt(now) //
-        .setExpiration(validity) //
-        .signWith(secretKey, SignatureAlgorithm.HS256) //
+    return Jwts.builder()
+        .setClaims(claims)
+        .setIssuedAt(new Date(now))
+        .setExpiration(new Date(now + validityInMilliseconds))
+        .signWith(secretKey, SignatureAlgorithm.HS256)
         .compact();
   }
 
@@ -61,18 +58,32 @@ public class JwtTokenProvider {
     return null;
   }
 
-  public boolean validateToken(String token) {
-    try {
-      Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
-      return true;
-    } catch (JwtException | IllegalArgumentException e) {
-      return false;
-    }
+  public boolean validateToken(String token, UserDetails userDetails) {
+    final String username = extractUsername(token);
+    return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
   }
 
-  public Authentication getAuthentication(String token) {
-    Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
-    String username = claims.getSubject();
-    return new UsernamePasswordAuthenticationToken(username, "", Collections.emptyList());
+  private boolean isTokenExpired(String token) {
+    return extractExpiration(token).before(new Date());
+  }
+
+  public String extractUsername(String token) {
+    return extractClaims(token).getSubject();
+  }
+
+  public Date extractExpiration(String token) {
+    return extractClaims(token).getExpiration();
+  }
+
+  public Claims extractClaims(String token) {
+    try {
+      return Jwts.parserBuilder()
+          .setSigningKey(secretKey)
+          .build()
+          .parseClaimsJws(token)
+          .getBody();
+    } catch (JwtException e) {
+      throw new JwtException("Invalid token");
+    }
   }
 }

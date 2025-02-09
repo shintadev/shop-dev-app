@@ -19,42 +19,43 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-  private final UserRepo userRepo;
+  // private final UserRepo userRepo;
 
-  private final JwtTokenProvider jwtTokenProvider;
+  // private final JwtTokenProvider jwtTokenProvider;
 
-  private final FirebaseAuth firebaseAuth;
+  // private final FirebaseAuth firebaseAuth;
 
-  @Override
-  public String authenticateGoogleUser(String idToken) {
-    try {
-      FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
-      String uid = decodedToken.getUid();
-      String email = decodedToken.getEmail();
-      String name = decodedToken.getName();
+  // @Override
+  // public String authenticateGoogleUser(String idToken) {
+  // try {
+  // FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
+  // String uid = decodedToken.getUid();
+  // String email = decodedToken.getEmail();
+  // String name = decodedToken.getName();
 
-      // Check if user exists in database; if not, create a new user
-      User user = userRepo.findByEmail(email)
-          .orElseGet(() -> {
-            User newUser = User.builder()
-                .email(email)
-                // .name(name)
-                // .roles(Arrays.asList("ROLE_USER"))
-                .build();
-            return userRepo.save(newUser);
-          });
+  // // Check if user exists in database; if not, create a new user
+  // User user = userRepo.findByEmail(email)
+  // .orElseGet(() -> {
+  // User newUser = User.builder()
+  // .email(email)
+  // // .name(name)
+  // // .roles(Arrays.asList("ROLE_USER"))
+  // .build();
+  // return userRepo.save(newUser);
+  // });
 
-      // Generate JWT token for user
-      return jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
-    } catch (Exception e) {
-      throw new RuntimeException("Invalid token" + e.getMessage());
-    }
-  }
+  // // Generate JWT token for user
+  // return jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+  // } catch (Exception e) {
+  // throw new RuntimeException("Invalid token" + e.getMessage());
+  // }
+  // }
 
-  @Override
-  public User getCurrentUser() {
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-    return userRepo.findByEmail(email)
-        .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
-  }
+  // @Override
+  // public User getCurrentUser() {
+  // String email =
+  // SecurityContextHolder.getContext().getAuthentication().getName();
+  // return userRepo.findByEmail(email)
+  // .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+  // }
 }

@@ -21,11 +21,12 @@ public class AuthController {
 
   private final AuthService authService;
 
-  @PostMapping("/google")
-  public ResponseEntity<?> googleLogin(@RequestBody GoogleLoginRequest request) {
-    String token = authService.authenticateGoogleUser(request.getIdToken());
-    Map<String, String> response = new HashMap<>();
-    response.put("token", token);
-    return ResponseEntity.ok(response);
-  }
+  // @PostMapping("/google")
+  // public ResponseEntity<?> googleLogin(@RequestBody GoogleLoginRequest request)
+  // {
+  // String token = authService.authenticateGoogleUser(request.getIdToken());
+  // Map<String, String> response = new HashMap<>();
+  // response.put("token", token);
+  // return ResponseEntity.ok(response);
+  // }
 }
