@@ -28,13 +28,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
   @Query("SELECT u FROM User u WHERE u.email = ?1")
   Optional<User> findByEmailForUpdate(String email);
 
-  @Query("SELECT u FROM User u WHERE u.slug = ?1")
-  Optional<User> findBySlug(String slug);
-
-  @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("SELECT u FROM User u WHERE u.slug = ?1")
-  Optional<User> findBySlugForUpdate(String slug);
-
   boolean existsByEmail(String email);
 
   @Modifying

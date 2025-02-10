@@ -10,15 +10,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "cart_items")
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class CartItem extends BaseEntity{
 
   @Positive

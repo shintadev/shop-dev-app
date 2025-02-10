@@ -16,12 +16,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "categories")
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class Category extends BaseEntity{
 
   @NotNull

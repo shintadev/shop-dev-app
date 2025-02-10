@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import com.shintadev.shop_dev_app.exception.ResourceNotFoundException;
+import com.shintadev.shop_dev_app.repository.user.UserRepo;
 import com.shintadev.shop_dev_app.util.JwtTokenProvider;
 
 import jakarta.servlet.FilterChain;
@@ -31,7 +33,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider jwtTokenProvider;
 
-  private final UserDetailsService userDetailsService;
+  // private final UserDetailsService userDetailsService;
+
+  private final UserRepo userRepo;
 
   @Override
   protected void doFilterInternal(
@@ -53,7 +57,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
       // Check if the username is not null and the user is not already authenticated
       if (username != null && authentication == null) {
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        final UserDetails userDetails = userRepo.findByEmail(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "email", username));
 
         // Validate the token
         if (jwtTokenProvider.validateToken(token, userDetails)) {

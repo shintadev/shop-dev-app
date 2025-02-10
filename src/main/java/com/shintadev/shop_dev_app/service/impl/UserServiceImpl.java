@@ -6,11 +6,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shintadev.shop_dev_app.domain.dto.request.AddressRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.UserProfileUpdateRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
@@ -23,7 +21,6 @@ import com.shintadev.shop_dev_app.mapper.UserMapper;
 import com.shintadev.shop_dev_app.repository.user.UserRepo;
 import com.shintadev.shop_dev_app.service.RedisService;
 import com.shintadev.shop_dev_app.service.UserService;
-import com.shintadev.shop_dev_app.util.StringUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +46,6 @@ public class UserServiceImpl implements UserService {
     }
 
     User user = userMapper.toEntity(request);
-    String slug = StringUtil.generateSlug(user);
-    user.setSlug(slug);
     user.setStatus(UserStatus.ACTIVE);
 
     User savedUser = userRepo.saveAndFlush(user);
@@ -149,28 +144,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserResponse findBySlug(String slug) {
-    // Check if the user is in Redis
-    String key = "user_" + slug;
-    UserResponse userFromRedis = redisService.getObject(key, UserResponse.class);
-    if (userFromRedis != null) {
-      log.info("User found in Redis");
-      return userFromRedis;
-    }
-
-    // If not found in Redis, get from database
-    User user = userRepo.findBySlug(slug)
-        .orElseThrow(() -> new RuntimeException("User not found with slug " + slug));
-
-    // Save to Redis
-    redisService.setObject(key, user);
-    redisService.getRedisTemplate().expire(key, 1, TimeUnit.HOURS);
-    
-    return userMapper.toResponse(user);
-  }
-
-  @Override
-  @Transactional(readOnly = true)
   public List<AddressResponse> findUserAddresses(Long userId) {
     User user = userRepo.findById(userId)
         .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
@@ -188,8 +161,6 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new RuntimeException("User not found with id " + id));
 
     userMapper.updateFromRequest(userDto, existingUser);
-    String slug = StringUtil.generateSlug(existingUser);
-    existingUser.setSlug(slug);
 
     // TODO: Update firebase
 

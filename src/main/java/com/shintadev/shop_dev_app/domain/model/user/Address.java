@@ -43,8 +43,9 @@ public class Address {
   @Column(name = "phone", length = 16, nullable = false)
   private String phone;
 
-  @Column(name = "is_default", nullable = false, columnDefinition = "boolean default false")
-  private boolean isDefault;
+  @Column(name = "is_default", nullable = false)
+  @Builder.Default
+  private boolean isDefault = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)

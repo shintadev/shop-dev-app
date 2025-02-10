@@ -10,7 +10,6 @@ import com.shintadev.shop_dev_app.domain.model.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,6 +24,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
@@ -35,7 +35,7 @@ import lombok.EqualsAndHashCode;
         @Index(name = "idx_order_created_at", columnList = "created_at")
     })
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class Order extends BaseEntity {
 
   @NotNull
@@ -45,8 +45,9 @@ public class Order extends BaseEntity {
   @NotNull
   @Column(name = "total_price", nullable = false)
   private double totalPrice;
-  
-  @Embedded
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "address_id", nullable = false)
   private Address address;
 
   @NotNull

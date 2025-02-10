@@ -5,22 +5,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.google.api.client.util.Value;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
+@Getter
 public class JwtTokenProvider {
 
   @Value("${security.jwt.secret}")
@@ -33,7 +37,13 @@ public class JwtTokenProvider {
 
   @PostConstruct
   protected void init() {
-    this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    try {
+      log.info("Initializing JwtTokenProvider with secret: {}", secret);
+      this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    } catch (Exception e) {
+      log.error("Failed to initialize JwtTokenProvider", e);
+      throw e;
+    }
   }
 
   public String createToken(UserDetails userDetails) {

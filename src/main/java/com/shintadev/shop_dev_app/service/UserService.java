@@ -16,8 +16,6 @@ public interface UserService extends BaseService<UserResponse, Long, UserRequest
 
   UserResponse findByEmail(String email);
 
-  UserResponse findBySlug(String slug);
-
   UserResponse addAddress(Long userId, AddressRequest request);
 
   UserResponse updateAddress(Long userId, Long addressId, AddressRequest request);

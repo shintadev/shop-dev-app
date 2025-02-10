@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserResponse {
 
   private Long id;
@@ -22,7 +20,6 @@ public class UserResponse {
   private String email;
   private String phone;
   private UserStatus status;
-  private String slug;
   private String avatarUrl;
   private List<AddressResponse> addresses;
   private LocalDateTime createdAt;

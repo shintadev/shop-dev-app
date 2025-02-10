@@ -15,7 +15,6 @@ import com.shintadev.shop_dev_app.domain.dto.request.AddressRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.AddressResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
-import com.shintadev.shop_dev_app.payload.user.UserDto;
 import com.shintadev.shop_dev_app.service.UserService;
 
 import jakarta.validation.Valid;
@@ -78,11 +77,6 @@ public class UserController {
   // public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
   // return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
   // }
-
-  @GetMapping("/{slug}")
-  public ResponseEntity<UserResponse> getBySlug(@PathVariable String slug) {
-    return new ResponseEntity<>(userService.findBySlug(slug), HttpStatus.OK);
-  }
 
   // @PostMapping("/address")
   // public ResponseEntity<UserResponse> getByAddress(@PathVariable AddressRequest

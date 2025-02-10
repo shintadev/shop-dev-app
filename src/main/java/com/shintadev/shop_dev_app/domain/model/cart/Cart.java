@@ -16,12 +16,13 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "carts")
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class Cart extends BaseEntity{
 
   @OneToOne(fetch = FetchType.LAZY)

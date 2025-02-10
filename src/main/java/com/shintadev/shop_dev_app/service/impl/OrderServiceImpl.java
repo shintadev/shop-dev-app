@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shintadev.shop_dev_app.domain.model.order.Order;
-import com.shintadev.shop_dev_app.payload.order.OrderDto;
 import com.shintadev.shop_dev_app.repository.order.OrderRepo;
 import com.shintadev.shop_dev_app.service.OrderService;
 
@@ -17,81 +16,81 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
-  private final OrderRepo orderRepo;
+  // private final OrderRepo orderRepo;
 
-  private ObjectMapper objectMapper;
+  // private ObjectMapper objectMapper;
 
-  OrderServiceImpl(OrderRepo orderRepo, ObjectMapper objectMapper) {
-    this.orderRepo = orderRepo;
-    this.objectMapper = objectMapper;
-  }
+  // OrderServiceImpl(OrderRepo orderRepo, ObjectMapper objectMapper) {
+  // this.orderRepo = orderRepo;
+  // this.objectMapper = objectMapper;
+  // }
 
-  @Override
-  @Transactional
-  public OrderDto create(OrderDto orderDto) {
-    Order order = convertToEntity(orderDto);
-    Order newOrder = orderRepo.saveAndFlush(order);
+  // @Override
+  // @Transactional
+  // public OrderDto create(OrderDto orderDto) {
+  // Order order = convertToEntity(orderDto);
+  // Order newOrder = orderRepo.saveAndFlush(order);
 
-    return convertToDto(newOrder);
-  }
+  // return convertToDto(newOrder);
+  // }
 
-  @Override
-  public Page<OrderDto> findAll(Pageable pageable) {
-    Page<Order> orders = orderRepo.findAll(pageable);
+  // @Override
+  // public Page<OrderDto> findAll(Pageable pageable) {
+  // Page<Order> orders = orderRepo.findAll(pageable);
 
-    return orders.map(this::convertToDto);
-  }
+  // return orders.map(this::convertToDto);
+  // }
 
-  @Override
-  public OrderDto findOne(Long id) {
-    Order order = orderRepo.findById(id).orElse(null);
+  // @Override
+  // public OrderDto findOne(Long id) {
+  // Order order = orderRepo.findById(id).orElse(null);
 
-    return convertToDto(order);
-  }
+  // return convertToDto(order);
+  // }
 
-  @Override
-  @Transactional
-  public OrderDto update(Long id, OrderDto orderDto) {
-    if (!isExists(id)) {
-      return null;
-    }
+  // @Override
+  // @Transactional
+  // public OrderDto update(Long id, OrderDto orderDto) {
+  // if (!isExists(id)) {
+  // return null;
+  // }
 
-    Order order = convertToEntity(orderDto);
-    order.setId(id);
-    Order updatedOrder = orderRepo.saveAndFlush(order);
+  // Order order = convertToEntity(orderDto);
+  // order.setId(id);
+  // Order updatedOrder = orderRepo.saveAndFlush(order);
 
-    return convertToDto(updatedOrder);
-  }
+  // return convertToDto(updatedOrder);
+  // }
 
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    Order order = orderRepo.findById(id).orElse(null);
-    if (order == null) {
-      return;
-    }
+  // @Override
+  // @Transactional
+  // public void delete(Long id) {
+  // Order order = orderRepo.findById(id).orElse(null);
+  // if (order == null) {
+  // return;
+  // }
 
-    order.setDeleted(true);
-    orderRepo.saveAndFlush(order);
-  }
+  // order.setDeleted(true);
+  // orderRepo.saveAndFlush(order);
+  // }
 
-  @Override
-  public boolean isExists(Long id) {
-    return orderRepo.existsById(id);
-  }
+  // @Override
+  // public boolean isExists(Long id) {
+  // return orderRepo.existsById(id);
+  // }
 
-  @Override
-  public Page<OrderDto> findByUserId(Long userId, Pageable pageable) {
-    Page<Order> orders = orderRepo.findByUserId(userId, pageable);
+  // @Override
+  // public Page<OrderDto> findByUserId(Long userId, Pageable pageable) {
+  // Page<Order> orders = orderRepo.findByUserId(userId, pageable);
 
-    return orders.map(this::convertToDto);
-  }
+  // return orders.map(this::convertToDto);
+  // }
 
-  private OrderDto convertToDto(Order order) {
-    return objectMapper.convertValue(order, OrderDto.class);
-  }
+  // private OrderDto convertToDto(Order order) {
+  // return objectMapper.convertValue(order, OrderDto.class);
+  // }
 
-  private Order convertToEntity(OrderDto orderDto) {
-    return objectMapper.convertValue(orderDto, Order.class);
-  }
+  // private Order convertToEntity(OrderDto orderDto) {
+  // return objectMapper.convertValue(orderDto, Order.class);
+  // }
 }

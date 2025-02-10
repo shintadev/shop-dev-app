@@ -11,11 +11,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
@@ -26,7 +27,7 @@ import lombok.EqualsAndHashCode;
         @Index(name = "idx_payment_created_at", columnList = "created_at")
     })
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class Payment extends BaseEntity{
 
   @NotNull
@@ -48,6 +49,6 @@ public class Payment extends BaseEntity{
   private double amount;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @Column(name = "order_id", nullable = false, unique = true)
+  @PrimaryKeyJoinColumn(name = "order_id")
   private Order order;
 }

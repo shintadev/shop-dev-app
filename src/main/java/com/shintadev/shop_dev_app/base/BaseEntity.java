@@ -12,12 +12,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Data
+@SuperBuilder
 public abstract class BaseEntity implements SoftDeletable {
 
   @Id
@@ -26,14 +26,12 @@ public abstract class BaseEntity implements SoftDeletable {
   private Long id;
 
   @CreationTimestamp
-  @Temporal(TemporalType.DATE)
-  @Column(name = "create_at", updatable = false)
-  private LocalDateTime createAt;
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
   @UpdateTimestamp
-  @Temporal(TemporalType.DATE)
-  @Column(name = "update_at")
-  private LocalDateTime updateAt;
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
   @Column(nullable = false, columnDefinition = "boolean default false")
   private boolean deleted;

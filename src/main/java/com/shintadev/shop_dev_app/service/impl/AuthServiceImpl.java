@@ -1,61 +1,60 @@
 package com.shintadev.shop_dev_app.service.impl;
 
-import java.util.Arrays;
-
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseToken;
-import com.shintadev.shop_dev_app.domain.model.user.User;
-import com.shintadev.shop_dev_app.exception.ResourceNotFoundException;
-import com.shintadev.shop_dev_app.repository.user.UserRepo;
+import com.shintadev.shop_dev_app.domain.dto.request.auth.LoginRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.auth.PasswordResetRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.auth.RegisterRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.auth.VerifyRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
+import com.shintadev.shop_dev_app.domain.dto.response.auth.LoginResponse;
 import com.shintadev.shop_dev_app.service.AuthService;
-import com.shintadev.shop_dev_app.util.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+  @Override
+  public UserResponse getCurrentUser() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getCurrentUser'");
+  }
 
-  // private final UserRepo userRepo;
+  @Override
+  public LoginResponse register(RegisterRequest request) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'register'");
+  }
 
-  // private final JwtTokenProvider jwtTokenProvider;
+  @Override
+  public void verify(VerifyRequest request) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'verify'");
+  }
 
-  // private final FirebaseAuth firebaseAuth;
+  @Override
+  public void resendVerification(String email) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'resendVerification'");
+  }
 
-  // @Override
-  // public String authenticateGoogleUser(String idToken) {
-  // try {
-  // FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
-  // String uid = decodedToken.getUid();
-  // String email = decodedToken.getEmail();
-  // String name = decodedToken.getName();
+  @Override
+  public LoginResponse login(LoginRequest request) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'login'");
+  }
 
-  // // Check if user exists in database; if not, create a new user
-  // User user = userRepo.findByEmail(email)
-  // .orElseGet(() -> {
-  // User newUser = User.builder()
-  // .email(email)
-  // // .name(name)
-  // // .roles(Arrays.asList("ROLE_USER"))
-  // .build();
-  // return userRepo.save(newUser);
-  // });
+  @Override
+  public void sendPasswordReset(String email) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'sendPasswordReset'");
+  }
 
-  // // Generate JWT token for user
-  // return jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
-  // } catch (Exception e) {
-  // throw new RuntimeException("Invalid token" + e.getMessage());
-  // }
-  // }
+  @Override
+  public void verifyPasswordReset(PasswordResetRequest request) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'verifyPasswordReset'");
+  }
 
-  // @Override
-  // public User getCurrentUser() {
-  // String email =
-  // SecurityContextHolder.getContext().getAuthentication().getName();
-  // return userRepo.findByEmail(email)
-  // .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
-  // }
 }

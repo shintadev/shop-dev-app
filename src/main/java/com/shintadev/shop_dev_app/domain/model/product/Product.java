@@ -19,17 +19,18 @@ import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "products",
     indexes = {
 				@Index(name = "idx_product_slug", columnList = "slug"),
-        @Index(name = "idx_product_category_id", columnList = "category_id"),
+        @Index(name = "idx_product_category", columnList = "category"),
         @Index(name = "idx_product_status", columnList = "status")
     })
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class Product extends BaseEntity {
 
   @NotNull

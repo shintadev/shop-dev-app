@@ -29,16 +29,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "users",
     indexes = {
         @Index(name = "idx_user_email", columnList = "email", unique = true),
-        @Index(name = "idx_user_slug", columnList = "slug")
     })
 @EqualsAndHashCode(callSuper = true)
-@Builder
+@SuperBuilder
 public class User extends BaseEntity implements UserDetails {
 
   @NotNull
@@ -71,10 +71,6 @@ public class User extends BaseEntity implements UserDetails {
   @Column(name = "role", nullable = false)
   @Builder.Default
   private UserRole role = UserRole.ROLE_USER;
-
-  @NotNull
-  @Column(name = "slug", length = 128, nullable = false, unique = true)
-  private String slug;
 
   @Column(name = "avatar_url", length = 256)
   private String avatarUrl;
