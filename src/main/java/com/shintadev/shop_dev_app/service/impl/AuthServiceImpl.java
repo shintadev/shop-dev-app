@@ -31,10 +31,12 @@ import com.shintadev.shop_dev_app.service.EmailService;
 import com.shintadev.shop_dev_app.util.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
   private final UserRepo userRepo;
@@ -92,6 +94,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void verify(VerifyRequest request) {
+    // 1. Find user by email
     Optional<User> userOpt = userRepo.findByEmailForUpdate(request.getEmail());
 
     if (userOpt.isEmpty()) {
@@ -104,6 +107,7 @@ public class AuthServiceImpl implements AuthService {
       throw new RuntimeException("User already verified");
     }
 
+    // 2. Find verification token
     VerifyEmailToken verifyEmailTokenOpt = verifyEmailTokenRepo.findByUserId(user.getId())
         .orElseThrow(() -> new RuntimeException("Invalid or expired token"));
 
@@ -115,15 +119,19 @@ public class AuthServiceImpl implements AuthService {
       throw new RuntimeException("Invalid verification code");
     }
 
+    // 3. Verify user and delete token
     user.setStatus(UserStatus.ACTIVE);
 
     userRepo.save(user);
 
     verifyEmailTokenRepo.delete(verifyEmailTokenOpt);
+
+    log.info("User verified: {}", user.getEmail());
   }
 
   @Override
   public void resendVerification(String email) {
+    // 1. Find user by email
     Optional<User> userOpt = userRepo.findByEmail(email);
 
     if (userOpt.isEmpty()) {
@@ -132,10 +140,12 @@ public class AuthServiceImpl implements AuthService {
 
     User user = userOpt.get();
 
+    // 2. Check if user is already verified
     if (user.getStatus() == UserStatus.ACTIVE) {
       throw new RuntimeException("User already verified");
     }
 
+    // 3. Delete existing token and create new one
     verifyEmailTokenRepo.findByUserId(user.getId())
         .ifPresent(verifyEmailTokenRepo::delete);
 
@@ -147,20 +157,22 @@ public class AuthServiceImpl implements AuthService {
 
     verifyEmailTokenRepo.save(verifyEmailToken);
 
+    // 4. Send verification email
     sendVerificationEmail(email, verifyEmailToken.getToken());
-
-    userRepo.save(user);
   }
 
   @Override
   public LoginResponse login(LoginRequest request) {
+    // 1. Find user by email
     User user = userRepo.findByEmail(request.getEmail())
         .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.getEmail()));
 
+    // 2. Check if user is verified
     if (user.getStatus().equals(UserStatus.INACTIVE)) {
       throw new RuntimeException("User not verified");
     }
 
+    // 3. Authenticate user and generate token
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             request.getEmail(),
@@ -168,6 +180,7 @@ public class AuthServiceImpl implements AuthService {
 
     String token = "Bearer " + jwtTokenProvider.createToken(user);
 
+    // 4. Return token
     return LoginResponse.builder()
         .token(token)
         .expiresInMs(jwtTokenProvider.getValidityInMilliseconds())
@@ -176,6 +189,18 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void sendPasswordReset(String email) {
+    // 1. Check if password reset email already sent
+    Optional<PasswordResetToken> existingTokenOpt = passwordResetTokenRepo.findByUserEmail(email);
+
+    if (existingTokenOpt.isPresent()) {
+      if (existingTokenOpt.get().getExpiryTime().isAfter(LocalDateTime.now())) {
+        throw new RuntimeException("Password reset email already sent");
+      } else {
+        passwordResetTokenRepo.delete(existingTokenOpt.get());
+      }
+    }
+
+    // 2. Find user by email
     Optional<User> userOpt = userRepo.findByEmail(email);
 
     if (userOpt.isEmpty()) {
@@ -184,6 +209,7 @@ public class AuthServiceImpl implements AuthService {
 
     User user = userOpt.get();
 
+    // 3. Create password reset token
     PasswordResetToken passwordResetToken = PasswordResetToken.builder()
         .user(user)
         .expiryTime(LocalDateTime.now().plusHours(1))
@@ -191,6 +217,7 @@ public class AuthServiceImpl implements AuthService {
 
     passwordResetTokenRepo.save(passwordResetToken);
 
+    // 4. Send password reset email
     String resetUrl = "http://localhost:8080/reset-password?token=" + passwordResetToken.getToken();
 
     sendPasswordResetEmail(email, resetUrl);
@@ -198,6 +225,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void verifyPasswordReset(PasswordResetRequest request) {
+    // 1. Find and validate password reset token
     Optional<PasswordResetToken> passwordResetTokenOpt = passwordResetTokenRepo.findByToken(request.getToken());
 
     if (passwordResetTokenOpt.isEmpty()) {
@@ -214,6 +242,7 @@ public class AuthServiceImpl implements AuthService {
       throw new RuntimeException("Invalid token");
     }
 
+    // 2. Update user password and delete token
     User user = userRepo.findByEmailForUpdate(request.getEmail())
         .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.getEmail()));
 

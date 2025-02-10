@@ -17,4 +17,8 @@ public interface PasswordResetTokenRepo extends JpaRepository<PasswordResetToken
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("SELECT t FROM PasswordResetToken t WHERE t.token = ?1")
   Optional<PasswordResetToken> findByToken(String token);
+
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+  @Query("SELECT t FROM User u INNER JOIN PasswordResetToken t ON u.id = t.user.id WHERE u.email = ?1")
+  Optional<PasswordResetToken> findByUserEmail(String email);
 }
