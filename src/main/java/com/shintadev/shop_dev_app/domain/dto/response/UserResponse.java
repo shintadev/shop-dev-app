@@ -5,10 +5,8 @@ import java.util.List;
 
 import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder

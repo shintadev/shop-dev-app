@@ -49,6 +49,22 @@ spring:
         #     token-uri: https://accounts.google.com/o/oauth2/token
         #     user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
         #     user-name-attribute: sub
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        debug: true
 
 security:
   jwt:

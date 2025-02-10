@@ -27,6 +27,7 @@ import com.shintadev.shop_dev_app.repository.user.PasswordResetTokenRepo;
 import com.shintadev.shop_dev_app.repository.user.UserRepo;
 import com.shintadev.shop_dev_app.repository.user.VerifyEmailTokenRepo;
 import com.shintadev.shop_dev_app.service.AuthService;
+import com.shintadev.shop_dev_app.service.EmailService;
 import com.shintadev.shop_dev_app.util.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
 
   private final PasswordResetTokenRepo passwordResetTokenRepo;
 
-  // private final EmailService emailService;
+  private final EmailService emailService;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -240,7 +241,7 @@ public class AuthServiceImpl implements AuthService {
         + "</body>"
         + "</html>";
 
-    // emailService.sendHtmlEmail(email, subject, text);
+    emailService.sendHtmlEmail(email, subject, text);
   }
 
   private void sendPasswordResetEmail(String email, String resetUrl) {
@@ -257,7 +258,7 @@ public class AuthServiceImpl implements AuthService {
         + "</body>"
         + "</html>";
 
-    // emailService.sendHtmlEmail(email, subject, text);
+    emailService.sendHtmlEmail(email, subject, text);
   }
 
   private String generateVerificationCode() {
