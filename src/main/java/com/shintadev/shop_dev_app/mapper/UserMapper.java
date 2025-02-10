@@ -32,8 +32,6 @@ public interface UserMapper {
   @Mapping(target = "orders", ignore = true)
   @Mapping(target = "password", ignore = true)
   @Mapping(target = "role", ignore = true)
-  @Mapping(target = "verificationCode", ignore = true)
-  @Mapping(target = "verificationCodeExpirationAt", ignore = true)
   User toEntity(UserRequest request);
 
   UserResponse toResponse(User user);
@@ -48,8 +46,6 @@ public interface UserMapper {
   @Mapping(target = "orders", ignore = true)
   @Mapping(target = "password", ignore = true)
   @Mapping(target = "role", ignore = true)
-  @Mapping(target = "verificationCode", ignore = true)
-  @Mapping(target = "verificationCodeExpirationAt", ignore = true)
   @Mapping(target = "avatarUrl", ignore = true)
   @Mapping(target = "email", ignore = true)
   @Mapping(target = "authorities", ignore = true)

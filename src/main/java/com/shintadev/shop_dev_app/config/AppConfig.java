@@ -21,6 +21,8 @@ public class AppConfig {
   @Bean
   BCryptPasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder() {
+
+      // Uncomment this block to use plain text password
       // @Override
       // public String encode(CharSequence rawPassword) {
       // return rawPassword.toString();

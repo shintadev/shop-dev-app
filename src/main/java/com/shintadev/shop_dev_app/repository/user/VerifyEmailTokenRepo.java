@@ -7,14 +7,14 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.shintadev.shop_dev_app.domain.model.user.Address;
+import com.shintadev.shop_dev_app.domain.model.user.VerifyEmailToken;
 
 import jakarta.persistence.LockModeType;
 
 @Repository
-public interface AddressRepo extends JpaRepository<Address, Long> {
+public interface VerifyEmailTokenRepo extends JpaRepository<VerifyEmailToken, Long> {
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("SELECT a FROM Address a WHERE a.id = ?1")
-  Optional<Address> findByIdForUpdate(Long id);
+  @Query("SELECT v FROM VerifyEmailToken v INNER JOIN User u ON v.user.id = u.id WHERE u.id = ?1")
+  Optional<VerifyEmailToken> findByUserId(Long userId);
 }

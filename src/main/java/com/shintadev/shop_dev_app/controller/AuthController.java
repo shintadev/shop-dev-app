@@ -2,8 +2,6 @@ package com.shintadev.shop_dev_app.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +26,7 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/signup")
-  public ResponseEntity<LoginResponse> signup(@RequestBody RegisterRequest request) {
+  public ResponseEntity<UserResponse> signup(@RequestBody RegisterRequest request) {
     return new ResponseEntity<>(authService.register(request), HttpStatus.CREATED);
   }
 
@@ -60,11 +58,5 @@ public class AuthController {
       @RequestBody PasswordResetRequest request) {
     authService.verifyPasswordReset(request);
     return new ResponseEntity<>("Password reset code verified successfully", HttpStatus.OK);
-  }
-
-  @PreAuthorize("isAuthenticated()")
-  @GetMapping("/profile")
-  public ResponseEntity<UserResponse> profile() {
-    return new ResponseEntity<>(authService.getCurrentUser(), HttpStatus.OK);
   }
 }

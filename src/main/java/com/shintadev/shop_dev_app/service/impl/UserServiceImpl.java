@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +43,13 @@ public class UserServiceImpl implements UserService {
   public UserResponse create(UserRequest request) {
     if (userRepo.existsByEmail(request.getEmail())) {
       log.error("Email {} already exists", request.getEmail());
-      throw new IllegalArgumentException("Email already in use");
+      throw new RuntimeException("Email already in use");
     }
 
     User user = userMapper.toEntity(request);
     user.setStatus(UserStatus.ACTIVE);
 
-    User savedUser = userRepo.saveAndFlush(user);
+    User savedUser = userRepo.save(user);
 
     // TODO: Publish event to Kafka
 
@@ -70,12 +71,19 @@ public class UserServiceImpl implements UserService {
     user.getAddresses().add(address);
     address.setUser(user);
 
-    User updatedUser = userRepo.saveAndFlush(user);
+    User updatedUser = userRepo.save(user);
 
     return userMapper.toResponse(updatedUser);
   }
 
   /* READ */
+
+  @Override
+  public UserResponse getCurrentUser() {
+    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    return userMapper.toResponse(user);
+  }
 
   @Override
   @Transactional(readOnly = true)
@@ -162,9 +170,7 @@ public class UserServiceImpl implements UserService {
 
     userMapper.updateFromRequest(userDto, existingUser);
 
-    // TODO: Update firebase
-
-    User updatedUser = userRepo.saveAndFlush(existingUser);
+    User updatedUser = userRepo.save(existingUser);
 
     // TODO: Send message to Kafka
 
@@ -192,7 +198,7 @@ public class UserServiceImpl implements UserService {
       });
     }
 
-    User updatedUser = userRepo.saveAndFlush(user);
+    User updatedUser = userRepo.save(user);
 
     return userMapper.toResponse(updatedUser);
   }
@@ -204,7 +210,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepo.findByIdForUpdate(id)
         .orElseThrow(() -> new RuntimeException("User not found with id " + id));
 
-    user.setStatus(UserStatus.INACTIVE);
+    user.setStatus(UserStatus.DELETED);
     user.setDeleted(true);
     userRepo.saveAndFlush(user);
 
@@ -222,7 +228,7 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new RuntimeException("Address not found with id " + addressId));
 
     user.getAddresses().remove(address);
-    userRepo.saveAndFlush(user);
+    userRepo.save(user);
   }
 
   @Override

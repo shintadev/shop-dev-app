@@ -6,26 +6,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.domain.dto.request.AddressRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
-import com.shintadev.shop_dev_app.domain.dto.response.AddressResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
 import com.shintadev.shop_dev_app.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/users")
@@ -83,4 +80,10 @@ public class UserController {
   // request) {
   // return new ResponseEntity<>(userService.addAddress(request), HttpStatus.OK);
   // }
+
+  @PreAuthorize("isAuthenticated()")
+  @GetMapping("/profile")
+  public ResponseEntity<UserResponse> profile() {
+    return new ResponseEntity<>(userService.getCurrentUser(), HttpStatus.OK);
+  }
 }

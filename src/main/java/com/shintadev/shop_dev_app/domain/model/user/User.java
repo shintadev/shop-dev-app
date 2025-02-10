@@ -1,6 +1,5 @@
 package com.shintadev.shop_dev_app.domain.model.user;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -74,12 +73,6 @@ public class User extends BaseEntity implements UserDetails {
 
   @Column(name = "avatar_url", length = 256)
   private String avatarUrl;
-
-  @Column(name = "verification_code")
-  private String verificationCode;
-
-  @Column(name = "verification_code_expiration_at")
-  private LocalDateTime verificationCodeExpirationAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default

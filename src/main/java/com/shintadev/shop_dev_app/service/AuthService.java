@@ -9,9 +9,7 @@ import com.shintadev.shop_dev_app.domain.dto.response.auth.LoginResponse;
 
 public interface AuthService {
 
-  UserResponse getCurrentUser();
-
-  LoginResponse register(RegisterRequest request);
+  UserResponse register(RegisterRequest request);
 
   void verify(VerifyRequest request);
 

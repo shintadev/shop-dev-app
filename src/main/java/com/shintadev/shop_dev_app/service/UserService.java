@@ -14,6 +14,8 @@ import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
 
 public interface UserService extends BaseService<UserResponse, Long, UserRequest, UserProfileUpdateRequest> {
 
+  UserResponse getCurrentUser();
+
   UserResponse findByEmail(String email);
 
   UserResponse addAddress(Long userId, AddressRequest request);

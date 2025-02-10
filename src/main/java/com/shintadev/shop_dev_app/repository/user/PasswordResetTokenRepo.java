@@ -7,14 +7,14 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.shintadev.shop_dev_app.domain.model.user.Address;
+import com.shintadev.shop_dev_app.domain.model.user.PasswordResetToken;
 
 import jakarta.persistence.LockModeType;
 
 @Repository
-public interface AddressRepo extends JpaRepository<Address, Long> {
+public interface PasswordResetTokenRepo extends JpaRepository<PasswordResetToken, Long> {
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("SELECT a FROM Address a WHERE a.id = ?1")
-  Optional<Address> findByIdForUpdate(Long id);
+  @Query("SELECT t FROM PasswordResetToken t WHERE t.token = ?1")
+  Optional<PasswordResetToken> findByToken(String token);
 }
