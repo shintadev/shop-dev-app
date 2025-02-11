@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.domain.dto.request;
+package com.shintadev.shop_dev_app.domain.dto.request.product;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,22 +10,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductRequest {
 
   @NotBlank(message = "Name is required")
-  @Size(max = 255, message = "Name must not exceed 255 characters")
+  @Size(max = 128, message = "Name must not exceed 128 characters")
   private String name;
 
-  @Size(max = 1000, message = "Description must not exceed 1000 characters")
+  @Size(max = 4096, message = "Description must not exceed 4096 characters")
   private String description;
 
   @NotNull(message = "Price is required")
@@ -36,10 +32,8 @@ public class ProductRequest {
   @PositiveOrZero(message = "Stock quantity must not be negative")
   private int stock;
 
-  private String slug;
-
   @NotBlank(message = "Category is required")
-  private String category;
+  private String categoryId;
 
   @Size(max = 5, message = "Maximum 5 images are allowed")
   private List<MultipartFile> images;

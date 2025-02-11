@@ -12,21 +12,26 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "products",
     indexes = {
-				@Index(name = "idx_product_slug", columnList = "slug"),
-        @Index(name = "idx_product_category", columnList = "category"),
+        @Index(name = "idx_product_name", columnList = "name"),
+        @Index(name = "idx_product_slug", columnList = "slug"),
         @Index(name = "idx_product_status", columnList = "status")
     })
 @EqualsAndHashCode(callSuper = false)
@@ -37,7 +42,7 @@ public class Product extends BaseEntity {
   @Column(name = "name", length = 128, nullable = false)
   private String name;
 
-  @Column(name = "description", length = Integer.MAX_VALUE, nullable = true)
+  @Column(name = "description", length = 4096)
   private String description;
 
   @NotNull
@@ -46,20 +51,25 @@ public class Product extends BaseEntity {
   private BigDecimal price;
 
   @NotNull
-  @Positive
+  @PositiveOrZero
   @Column(name = "stock", nullable = false)
-  private int stock;
+  @Builder.Default
+  private int stock = 1;
 
+  @NotNull
   @Column(name = "slug", length = 128, nullable = false, unique = true)
   private String slug;
 
-  @Column(name = "category", length = 128, nullable = false)
-  private String category;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  @ToString.Exclude
+  private Category category;
 
   @NotNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'ACTIVE'")
-  private ProductStatus status;
+  @Column(name = "status", nullable = false)
+  @Builder.Default
+  private ProductStatus status = ProductStatus.ACTIVE;
 
   @ElementCollection
   @CollectionTable(

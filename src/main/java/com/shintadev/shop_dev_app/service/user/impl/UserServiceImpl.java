@@ -141,6 +141,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse update(Long id, UserProfileUpdateRequest request) {
+    // 1. Check if the user exists
     User existingUser = userRepo.findByIdForUpdate(id)
         .orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
 
@@ -191,7 +192,7 @@ public class UserServiceImpl implements UserService {
     user.setStatus(UserStatus.DELETED);
     user.setDeleted(true);
 
-    userRepo.saveAndFlush(user);
+    userRepo.save(user);
 
     // TODO: Send message to Kafka
   }

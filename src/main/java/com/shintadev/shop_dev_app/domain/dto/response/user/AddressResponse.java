@@ -1,14 +1,10 @@
 package com.shintadev.shop_dev_app.domain.dto.response.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class AddressResponse {
 
   private Long id;

@@ -45,13 +45,13 @@ public class UserController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/{id}")
-  public ResponseEntity<UserResponse> getOne(@Valid @PathVariable String id) {
+  @GetMapping
+  public ResponseEntity<UserResponse> getOne(@RequestParam String id) {
     return new ResponseEntity<>(userService.findOne(Long.parseLong(id)), HttpStatus.OK);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping
+  @GetMapping("/all")
   public ResponseEntity<Page<UserResponse>> getAll(
       @RequestParam int page,
       @RequestParam(defaultValue = "10") int size,
@@ -65,8 +65,8 @@ public class UserController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @PutMapping("/{id}")
-  public ResponseEntity<UserResponse> update(@PathVariable String id,
+  @PutMapping
+  public ResponseEntity<UserResponse> update(@RequestParam String id,
       @Valid @RequestBody UserProfileUpdateRequest request) {
     return new ResponseEntity<>(userService.update(Long.parseLong(id), request),
         HttpStatus.OK);
