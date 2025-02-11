@@ -1,5 +1,7 @@
 package com.shintadev.shop_dev_app.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shintadev.shop_dev_app.domain.dto.request.user.AddressRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.user.UserProfileUpdateRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.user.UserRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.user.AddressResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.user.UserResponse;
 import com.shintadev.shop_dev_app.service.user.UserService;
 
@@ -76,16 +80,26 @@ public class UserController {
     return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
   }
 
-  @PreAuthorize("isAuthenticated()")
   @GetMapping("/profile")
   public ResponseEntity<UserResponse> profile() {
     return new ResponseEntity<>(userService.getCurrentUser(), HttpStatus.OK);
   }
 
-  @PreAuthorize("isAuthenticated()")
   @PutMapping("/profile")
   public ResponseEntity<UserResponse> updateProfile(
       @Valid @RequestBody UserProfileUpdateRequest request) {
     return new ResponseEntity<>(userService.updateCurrentUser(request), HttpStatus.OK);
+  }
+
+  @GetMapping("/{userId}/addresses")
+  public ResponseEntity<List<AddressResponse>> getAddresses(@PathVariable Long userId) {
+    return new ResponseEntity<>(userService.findUserAddresses(userId), HttpStatus.OK);
+  }
+
+  @PutMapping("/{userId}/addresses/{addressId}")
+  public ResponseEntity<UserResponse> updateAddress(@PathVariable Long userId,
+      @PathVariable Long addressId, @Valid @RequestBody AddressRequest request) {
+    return new ResponseEntity<>(userService.updateUserAddress(userId, addressId, request),
+        HttpStatus.OK);
   }
 }

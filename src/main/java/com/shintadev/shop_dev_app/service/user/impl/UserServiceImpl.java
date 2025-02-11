@@ -125,20 +125,6 @@ public class UserServiceImpl implements UserService {
         .collect(Collectors.toList());
   }
 
-  @Override
-  @Transactional(readOnly = true)
-  public AddressResponse findUserAddress(Long userId, Long addressId) {
-    User user = userRepo.findById(userId)
-        .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
-
-    Address address = user.getAddresses().stream()
-        .filter(a -> a.getId().equals(addressId))
-        .findFirst()
-        .orElseThrow(() -> new ResourceNotFoundException("Address", "id", addressId.toString()));
-
-    return userMapper.toResponse(address);
-  }
-
   /* UPDATE */
 
   @Override
@@ -168,7 +154,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserResponse updateAddress(Long userId, Long addressId, AddressRequest request) {
+  public UserResponse updateUserAddress(Long userId, Long addressId, AddressRequest request) {
     // 1. Find the user and address
     User user = userRepo.findByIdForUpdate(userId)
         .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));

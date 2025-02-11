@@ -15,9 +15,7 @@ public interface UserService extends BaseService<UserResponse, Long, UserRequest
 
   List<AddressResponse> findUserAddresses(Long userId);
 
-  AddressResponse findUserAddress(Long userId, Long addressId);
-
-  UserResponse updateAddress(Long userId, Long addressId, AddressRequest request);
+  UserResponse updateUserAddress(Long userId, Long addressId, AddressRequest request);
 
   void deleteAddress(Long userId, Long addressId);
 
