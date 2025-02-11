@@ -47,11 +47,15 @@ public interface UserMapper {
   void updateFromRequest(UserProfileUpdateRequest request, @MappingTarget User user);
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "isDefault", ignore = true)
+  @Mapping(target = "user", ignore = true)
   Address toEntity(AddressRequest request);
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "isDefault", ignore = true)
   AddressResponse toResponse(Address address);
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "user", ignore = true)
   void updateFromRequest(AddressRequest request, @MappingTarget Address address);
 }

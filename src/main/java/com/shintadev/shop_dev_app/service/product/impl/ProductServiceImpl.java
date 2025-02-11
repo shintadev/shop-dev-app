@@ -130,7 +130,9 @@ public class ProductServiceImpl implements ProductService {
     List<Product> relatedProducts = productRepo.findRelatedProducts(slug,
         (Pageable) PageRequest.of(0, 10));
 
-    return productMapper.toResponseList(relatedProducts);
+    return relatedProducts.stream()
+        .map(productMapper::toResponse)
+        .toList();
   }
 
   @Override

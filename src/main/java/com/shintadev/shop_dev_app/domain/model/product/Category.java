@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -40,5 +41,6 @@ public class Category extends BaseEntity{
 
   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
   @Builder.Default
+  @ToString.Exclude
   private Set<Product> products = new HashSet<>();
 }
