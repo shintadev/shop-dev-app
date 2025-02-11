@@ -8,11 +8,11 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import com.shintadev.shop_dev_app.domain.dto.request.AddressRequest;
-import com.shintadev.shop_dev_app.domain.dto.request.UserProfileUpdateRequest;
-import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
-import com.shintadev.shop_dev_app.domain.dto.response.AddressResponse;
-import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
+import com.shintadev.shop_dev_app.domain.dto.request.user.AddressRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.user.UserProfileUpdateRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.user.UserRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.user.AddressResponse;
+import com.shintadev.shop_dev_app.domain.dto.response.user.UserResponse;
 import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 
@@ -28,10 +28,7 @@ public interface UserMapper {
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   @Mapping(target = "addresses", ignore = true)
-  @Mapping(target = "displayName", ignore = true)
   @Mapping(target = "orders", ignore = true)
-  @Mapping(target = "password", ignore = true)
-  @Mapping(target = "role", ignore = true)
   User toEntity(UserRequest request);
 
   UserResponse toResponse(User user);
@@ -42,11 +39,9 @@ public interface UserMapper {
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   @Mapping(target = "addresses", ignore = true)
-  @Mapping(target = "displayName", ignore = true)
   @Mapping(target = "orders", ignore = true)
   @Mapping(target = "password", ignore = true)
   @Mapping(target = "role", ignore = true)
-  @Mapping(target = "avatarUrl", ignore = true)
   @Mapping(target = "email", ignore = true)
   @Mapping(target = "authorities", ignore = true)
   void updateFromRequest(UserProfileUpdateRequest request, @MappingTarget User user);

@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.domain.dto.request;
+package com.shintadev.shop_dev_app.domain.dto.request.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,7 +25,6 @@ public class AddressRequest {
   @Size(max = 128, message = "Province must not exceed 128 characters")
   private String province;
 
-  @NotBlank(message = "Postal code is required")
   @Size(max = 16, message = "Postal code must not exceed 16 characters")
   private String postalCode;
 

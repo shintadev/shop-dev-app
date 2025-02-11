@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -35,8 +36,7 @@ public class Address {
   @Column(name = "province", length = 128, nullable = false)
   private String province;
 
-  @NotNull
-  @Column(name = "postal_code", length = 16, nullable = false)
+  @Column(name = "postal_code", length = 16)
   private String postalCode;
 
   @NotNull
@@ -49,5 +49,6 @@ public class Address {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
+  @ToString.Exclude
   private User user;
 }

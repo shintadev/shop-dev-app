@@ -54,7 +54,10 @@ public class SecurityConfig {
             .requestMatchers("/api/orders/**").authenticated()
 
             // Admin-only endpoints
-            .requestMatchers("/api/admin/**").hasRole("ADMIN"))
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+            // All other requests must be authenticated
+            .anyRequest().authenticated())
         .oauth2Login(
             oauth2 -> oauth2
                 .successHandler(customOAuth2SuccessHandler));

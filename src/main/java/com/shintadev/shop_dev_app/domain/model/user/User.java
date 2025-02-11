@@ -52,9 +52,10 @@ public class User extends BaseEntity implements UserDetails {
   private String displayName;
 
   @NotNull
-  @Column(name = "email", length = 128, nullable = false, unique = true)
+  @Column(name = "email", length = 128, nullable = false, unique = true, updatable = false)
   private String email;
 
+  @NotNull
   @Column(name = "password", length = 36, nullable = false)
   private String password;
 
@@ -62,7 +63,7 @@ public class User extends BaseEntity implements UserDetails {
   private String phone;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'ACTIVE'")
+  @Column(name = "status", nullable = false)
   @Builder.Default
   private UserStatus status = UserStatus.INACTIVE;
 

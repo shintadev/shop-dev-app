@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.domain.dto.response;
+package com.shintadev.shop_dev_app.domain.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

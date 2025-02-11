@@ -12,13 +12,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
-import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
+import com.shintadev.shop_dev_app.domain.dto.request.user.UserProfileUpdateRequest;
+import com.shintadev.shop_dev_app.domain.dto.request.user.UserRequest;
+import com.shintadev.shop_dev_app.domain.dto.response.user.UserResponse;
 import com.shintadev.shop_dev_app.service.user.UserService;
 
 import jakarta.validation.Valid;
@@ -32,17 +34,19 @@ public class UserController {
 
   private final UserService userService;
 
-  @PostMapping("/register")
-  public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest request) {
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping
+  public ResponseEntity<UserResponse> create(@RequestBody UserRequest request) {
     return new ResponseEntity<>(userService.create(request), HttpStatus.CREATED);
   }
 
-  // @GetMapping("/{id}")
-  // public ResponseEntity<UserDto> getById(@PathVariable String id) {
-  // return new ResponseEntity<>(userService.findOne(Long.parseLong(id)),
-  // HttpStatus.OK);
-  // }
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/{id}")
+  public ResponseEntity<UserResponse> getOne(@Valid @PathVariable String id) {
+    return new ResponseEntity<>(userService.findOne(Long.parseLong(id)), HttpStatus.OK);
+  }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Page<UserResponse>> getAll(
       @RequestParam int page,
@@ -56,34 +60,32 @@ public class UserController {
     return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
   }
 
-  // @PatchMapping("/{id}")
-  // public ResponseEntity<UserResponse> update(@PathVariable String id,
-  // @RequestBody UserDto userDto) {
-  // return new ResponseEntity<>(userService.update(Long.parseLong(id), userDto),
-  // HttpStatus.OK);
-  // }
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping("/{id}")
+  public ResponseEntity<UserResponse> update(@PathVariable String id,
+      @Valid @RequestBody UserProfileUpdateRequest request) {
+    return new ResponseEntity<>(userService.update(Long.parseLong(id), request),
+        HttpStatus.OK);
+  }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<String> delete(@PathVariable String id) {
     userService.delete(Long.parseLong(id));
 
-    return new ResponseEntity<>(id, HttpStatus.OK);
+    return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
   }
-
-  // @GetMapping("/{email}")
-  // public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
-  // return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
-  // }
-
-  // @PostMapping("/address")
-  // public ResponseEntity<UserResponse> getByAddress(@PathVariable AddressRequest
-  // request) {
-  // return new ResponseEntity<>(userService.addAddress(request), HttpStatus.OK);
-  // }
 
   @PreAuthorize("isAuthenticated()")
   @GetMapping("/profile")
   public ResponseEntity<UserResponse> profile() {
     return new ResponseEntity<>(userService.getCurrentUser(), HttpStatus.OK);
+  }
+
+  @PreAuthorize("isAuthenticated()")
+  @PutMapping("/profile")
+  public ResponseEntity<UserResponse> updateProfile(
+      @Valid @RequestBody UserProfileUpdateRequest request) {
+    return new ResponseEntity<>(userService.updateCurrentUser(request), HttpStatus.OK);
   }
 }

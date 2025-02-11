@@ -4,8 +4,8 @@ import com.shintadev.shop_dev_app.domain.dto.request.auth.LoginRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.auth.PasswordResetRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.auth.RegisterRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.auth.VerifyRequest;
-import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.auth.LoginResponse;
+import com.shintadev.shop_dev_app.domain.dto.response.user.UserResponse;
 
 public interface AuthService {
 
