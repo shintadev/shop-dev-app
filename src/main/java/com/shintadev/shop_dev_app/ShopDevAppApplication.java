@@ -2,10 +2,8 @@ package com.shintadev.shop_dev_app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(scanBasePackages = "com.shintadev.shop_dev_app")
-@ComponentScan(basePackages = "com.shintadev.shop_dev_app")
 public class ShopDevAppApplication {
 
 	public static void main(String[] args) {

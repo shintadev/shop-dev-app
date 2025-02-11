@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.service.impl;
+package com.shintadev.shop_dev_app.service.product.impl;
 
 import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.shintadev.shop_dev_app.domain.dto.request.ProductFilterRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.ProductRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.ProductResponse;
@@ -14,8 +15,8 @@ import com.shintadev.shop_dev_app.domain.enums.product.ProductStatus;
 import com.shintadev.shop_dev_app.domain.model.product.Product;
 import com.shintadev.shop_dev_app.mapper.ProductMapper;
 import com.shintadev.shop_dev_app.repository.product.ProductRepo;
-import com.shintadev.shop_dev_app.service.ProductService;
-import com.shintadev.shop_dev_app.service.RedisService;
+import com.shintadev.shop_dev_app.service.other.RedisService;
+import com.shintadev.shop_dev_app.service.product.ProductService;
 import com.shintadev.shop_dev_app.util.StringUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
   private final ProductRepo productRepo;
 
   private final ProductMapper productMapper;
-  
+
   private final RedisService redisService;
 
   /* CREATE */

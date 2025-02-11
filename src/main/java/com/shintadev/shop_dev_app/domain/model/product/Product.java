@@ -2,6 +2,7 @@ package com.shintadev.shop_dev_app.domain.model.product;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.enums.product.ProductStatus;
 

@@ -1,10 +1,10 @@
-package com.shintadev.shop_dev_app.service.impl;
+package com.shintadev.shop_dev_app.service.other.impl;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.shintadev.shop_dev_app.service.EmailService;
+import com.shintadev.shop_dev_app.service.other.EmailService;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

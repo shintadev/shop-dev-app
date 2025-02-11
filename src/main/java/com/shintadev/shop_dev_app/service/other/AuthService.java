@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.service;
+package com.shintadev.shop_dev_app.service.other;
 
 import com.shintadev.shop_dev_app.domain.dto.request.auth.LoginRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.auth.PasswordResetRequest;

@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.service.impl;
+package com.shintadev.shop_dev_app.service.other.impl;
 
 import java.util.Map;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shintadev.shop_dev_app.service.RedisService;
+import com.shintadev.shop_dev_app.service.other.RedisService;
 
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class RedisServiceImpl implements RedisService {
 
   @Override
   public void setString(String key, String value) {
-    if(!StringUtils.hasLength(key)){
+    if (!StringUtils.hasLength(key)) {
       log.error("Key is empty or null");
       return;
     }
@@ -37,13 +37,13 @@ public class RedisServiceImpl implements RedisService {
   @Override
   public String getString(String key) {
     return Optional.ofNullable(redisTemplate.opsForValue().get(key))
-      .map(String::valueOf)
-      .orElse(null);
+        .map(String::valueOf)
+        .orElse(null);
   }
 
   @Override
   public void setObject(String key, Object value) {
-    if(!StringUtils.hasLength(key)){
+    if (!StringUtils.hasLength(key)) {
       log.error("Key is empty or null");
       return;
     }
@@ -58,12 +58,12 @@ public class RedisServiceImpl implements RedisService {
   @Override
   public <T> T getObject(String key, Class<T> clazz) {
     Object result = redisTemplate.opsForValue().get(key);
-    
-    if(result == null){
+
+    if (result == null) {
       return null;
     }
 
-    if(result instanceof Map){
+    if (result instanceof Map) {
       try {
         return objectMapper.convertValue(result, clazz);
       } catch (Exception e) {
@@ -72,7 +72,7 @@ public class RedisServiceImpl implements RedisService {
       }
     }
 
-    if(result instanceof String){
+    if (result instanceof String) {
       try {
         return objectMapper.readValue((String) result, clazz);
       } catch (Exception e) {

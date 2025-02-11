@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.service;
+package com.shintadev.shop_dev_app.service.other;
 
 import org.springframework.data.redis.core.RedisTemplate;
 

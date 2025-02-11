@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.service.impl;
+package com.shintadev.shop_dev_app.service.other.impl;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -26,8 +26,8 @@ import com.shintadev.shop_dev_app.mapper.UserMapper;
 import com.shintadev.shop_dev_app.repository.user.PasswordResetTokenRepo;
 import com.shintadev.shop_dev_app.repository.user.UserRepo;
 import com.shintadev.shop_dev_app.repository.user.VerifyEmailTokenRepo;
-import com.shintadev.shop_dev_app.service.AuthService;
-import com.shintadev.shop_dev_app.service.EmailService;
+import com.shintadev.shop_dev_app.service.other.AuthService;
+import com.shintadev.shop_dev_app.service.other.EmailService;
 import com.shintadev.shop_dev_app.util.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;

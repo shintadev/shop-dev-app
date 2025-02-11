@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.service.impl;
+package com.shintadev.shop_dev_app.service.user.impl;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -20,8 +20,8 @@ import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 import com.shintadev.shop_dev_app.mapper.UserMapper;
 import com.shintadev.shop_dev_app.repository.user.UserRepo;
-import com.shintadev.shop_dev_app.service.RedisService;
-import com.shintadev.shop_dev_app.service.UserService;
+import com.shintadev.shop_dev_app.service.other.RedisService;
+import com.shintadev.shop_dev_app.service.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.shintadev.shop_dev_app.service;
+package com.shintadev.shop_dev_app.service.product;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

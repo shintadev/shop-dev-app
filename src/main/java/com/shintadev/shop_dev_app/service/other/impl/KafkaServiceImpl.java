@@ -1,13 +1,8 @@
-package com.shintadev.shop_dev_app.service.impl;
+package com.shintadev.shop_dev_app.service.other.impl;
 
-import java.util.concurrent.CompletableFuture;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
-import com.shintadev.shop_dev_app.service.KafkaService;
+
+import com.shintadev.shop_dev_app.service.other.KafkaService;
 
 import lombok.extern.slf4j.Slf4j;
 

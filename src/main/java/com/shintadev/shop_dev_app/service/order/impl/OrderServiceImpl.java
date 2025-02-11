@@ -1,15 +1,9 @@
-package com.shintadev.shop_dev_app.service.impl;
+package com.shintadev.shop_dev_app.service.order.impl;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shintadev.shop_dev_app.domain.model.order.Order;
-import com.shintadev.shop_dev_app.repository.order.OrderRepo;
-import com.shintadev.shop_dev_app.service.OrderService;
+import com.shintadev.shop_dev_app.service.order.OrderService;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

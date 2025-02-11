@@ -14,7 +14,7 @@ import com.shintadev.shop_dev_app.domain.dto.request.auth.RegisterRequest;
 import com.shintadev.shop_dev_app.domain.dto.request.auth.VerifyRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.auth.LoginResponse;
-import com.shintadev.shop_dev_app.service.AuthService;
+import com.shintadev.shop_dev_app.service.other.AuthService;
 
 import lombok.RequiredArgsConstructor;
 

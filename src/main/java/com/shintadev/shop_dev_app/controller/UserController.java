@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shintadev.shop_dev_app.domain.dto.request.UserRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.UserResponse;
-import com.shintadev.shop_dev_app.service.UserService;
+import com.shintadev.shop_dev_app.service.user.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,6 @@
-package com.shintadev.shop_dev_app.service;
+package com.shintadev.shop_dev_app.service.user;
 
 import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import com.shintadev.shop_dev_app.base.BaseService;
 import com.shintadev.shop_dev_app.domain.dto.request.AddressRequest;
