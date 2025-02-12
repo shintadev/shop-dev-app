@@ -33,5 +33,9 @@ build/
 .vscode/
 
 ### Others ###
-/secrets/
 /.cache_ggshield
+**/.env**
+**/node_modules/
+**/build/
+**/.DS_Store
+**/npm-debug.log

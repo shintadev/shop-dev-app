@@ -1,9 +1,9 @@
 package com.shintadev.shop_dev_app.repository.product;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
-import org.apache.kafka.common.quota.ClientQuotaAlteration.Op;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,27 +22,61 @@ import jakarta.persistence.LockModeType;
 public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
   @Query("SELECT p FROM Product p WHERE " +
-      "(:category IS NULL OR p.category = :category) AND " +
+      "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
       "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
       "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
-      "p.status = 'ACTIVE'")
-  Page<Product> findProductsByFilters(
-      @Param("category") String category,
+      "(:keyword IS NULL OR " +
+      "(lower(p.name) LIKE lower(concat('%', :keyword, '%')) OR " +
+      "lower(p.description) LIKE lower(concat('%', :keyword, '%'))) OR " +
+      "(:status IS NULL OR p.status = :status))")
+  Page<Product> findProductsByAdminFilters(
+      @Param("categoryId") String categoryId,
       @Param("minPrice") BigDecimal minPrice,
       @Param("maxPrice") BigDecimal maxPrice,
+      @Param("keyword") String keyword,
+      @Param("status") String status,
       Pageable pageable);
 
+  @Query("SELECT p FROM Product p WHERE " +
+      "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
+      "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
+      "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
+      "(:keyword IS NULL OR " +
+      "(lower(p.name) LIKE lower(concat('%', :keyword, '%')) OR " +
+      "lower(p.description) LIKE lower(concat('%', :keyword, '%')))) AND " +
+      "p.status = 'ACTIVE'")
+  Page<Product> findProductsByFilters(
+      @Param("categoryId") String categoryId,
+      @Param("minPrice") BigDecimal minPrice,
+      @Param("maxPrice") BigDecimal maxPrice,
+      @Param("keyword") String keyword,
+      Pageable pageable);
+
+  @Query("SELECT p FROM Product p WHERE p.status = 'ACTIVE'")
+  Page<Product> findPublicProducts(Pageable pageable);
+
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("SELECT p FROM Product p WHERE p.id = :id")
-  Optional<Product> findByIdForUpdate(@Param("id") Long id);
+  @Query("SELECT p FROM Product p WHERE p.id = ?1")
+  Optional<Product> findByIdForUpdate(Long id);
 
-  @Query("SELECT p FROM Product p WHERE p.name LIKE %:name%")
-  Page<Product> findByNameLike(@Param("name") String name, Pageable pageable);
+  @Query("SELECT p FROM Product p WHERE " +
+      "(lower(p.name) LIKE lower(concat('%', :keyword, '%')) OR " +
+      "lower(p.description) LIKE lower(concat('%', :keyword, '%'))) AND " +
+      "p.status = 'ACTIVE'")
+  Page<Product> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-  @Query("SELECT p FROM Product p WHERE p.slug = :slug")
-  Optional<Product> findBySlug(@Param("slug") String slug);
+  @Query("SELECT p FROM Product p WHERE p.slug = ?1 AND p.status = 'ACTIVE'")
+  Optional<Product> findBySlug(String slug);
+
+  boolean existsByName(String name);
 
   @Modifying
   @Query("UPDATE Product p SET p.stock = p.stock - :quantity WHERE p.id = :id AND p.stock >= :quantity")
   int updateStock(@Param("id") Long id, @Param("quantity") int quantity);
+
+  @Query("SELECT p FROM Product p WHERE " +
+      "p.category.id = (SELECT p2.category.id FROM Product p2 WHERE p2.slug = :slug) AND " +
+      "p.slug <> :slug AND " +
+      "p.status = 'ACTIVE'")
+  List<Product> findRelatedProducts(@Param("slug") String slug, Pageable pageable);
 }

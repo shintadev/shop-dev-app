@@ -12,16 +12,17 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Data
-@Table(name = "address")
+@Table(name = "addresses")
 @Builder
 public class Address {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @NotNull
   @Column(name = "street", length = 255, nullable = false)
@@ -35,14 +36,19 @@ public class Address {
   @Column(name = "province", length = 128, nullable = false)
   private String province;
 
-  @NotNull
-  @Column(name = "postal_code", length = 16, nullable = false)
+  @Column(name = "postal_code", length = 16)
   private String postalCode;
 
-  @Column(name = "is_default", nullable = false, columnDefinition = "boolean default false")
-  private boolean isDefault;
+  @NotNull
+  @Column(name = "phone", length = 16, nullable = false)
+  private String phone;
+
+  @Column(name = "is_default", nullable = false)
+  @Builder.Default
+  private boolean isDefault = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
+  @ToString.Exclude
   private User user;
 }

@@ -4,14 +4,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import com.shintadev.shop_dev_app.domain.model.product.Product;
-import com.shintadev.shop_dev_app.domain.model.user.User;
-
 @Component
 public class StringUtil {
-
-  private StringUtil() {
-  }
 
   public static boolean isVNMobile(String mobile) {
     String pMobile = "^(0[135789]\\d{8,9})$";
@@ -23,11 +17,10 @@ public class StringUtil {
     return Pattern.matches(pEmail, email);
   }
 
-  public static String generateSlug(User user) {
-    return user.getFirstName().toLowerCase() + "-" + user.getLastName().toLowerCase() + "-" + user.getId();
-  }
-
-  public static String generateSlug(Product product) {
-    return product.getName().toLowerCase() + "-" + product.getId();
+  public static String generateSlug(String input) {
+    return input
+        .toLowerCase()
+        .replaceAll("^-|-$", "")
+        .replaceAll("[^a-z0-9 ]", "");
   }
 }

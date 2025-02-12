@@ -1,7 +1,7 @@
 package com.shintadev.shop_dev_app.domain.model.cart;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.model.user.User;
@@ -16,12 +16,13 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "carts")
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class Cart extends BaseEntity{
 
   @OneToOne(fetch = FetchType.LAZY)
@@ -30,5 +31,10 @@ public class Cart extends BaseEntity{
 
   @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
-  private Set<CartItem> cartItems = new HashSet<>();
+  private List<CartItem> cartItems = new ArrayList<>();
+
+  public Cart(User user) {
+    super();
+    this.user = user;
+  }
 }

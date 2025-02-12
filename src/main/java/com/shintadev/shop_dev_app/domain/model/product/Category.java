@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,12 +17,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
 @Table(name = "categories")
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 public class Category extends BaseEntity{
 
   @NotNull
@@ -35,4 +38,9 @@ public class Category extends BaseEntity{
   @OneToMany(mappedBy = "parent")
   @Builder.Default
   private Set<Category> subcategories = new HashSet<>();
+
+  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+  @Builder.Default
+  @ToString.Exclude
+  private Set<Product> products = new HashSet<>();
 }

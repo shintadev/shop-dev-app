@@ -3,15 +3,15 @@ package com.shintadev.shop_dev_app.base;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface BaseService<T, ID, RequestDto> {
+public interface BaseService<Response, ID, CreateRequest, UpdateRequest> {
 
-  T create(RequestDto request);
+  Response create(CreateRequest request);
 
-  Page<T> findAll(Pageable pageable);
+  Page<Response> findAll(Pageable pageable);
 
-  T findOne(ID id);
+  Response findOne(ID id);
 
-  T update(ID id, RequestDto request);
+  Response update(ID id, UpdateRequest request);
 
   void delete(ID id);
 
