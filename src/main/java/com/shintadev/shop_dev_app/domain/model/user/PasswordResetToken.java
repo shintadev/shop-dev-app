@@ -34,7 +34,7 @@ public class PasswordResetToken {
   @Column(name = "expiry_time", nullable = false)
   private LocalDateTime expiryTime;
 
-  @OneToOne(orphanRemoval = true)
+  @OneToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 }

@@ -28,11 +28,11 @@ public class VerifyEmailToken {
   @Column(name = "token", nullable = false)
   private String token;
 
-  @OneToOne(orphanRemoval = true)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
-
   @NotNull
   @Column(name = "expiry_time", nullable = false)
   private LocalDateTime expiryTime;
+
+  @OneToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 }

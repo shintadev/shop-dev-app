@@ -73,12 +73,13 @@ public class UserServiceImpl implements UserService {
 
     // 2. Create a new address
     Address address = userMapper.toEntity(request);
-    address.setUser(user);
 
     // 3. Ensure only one default address
     if (Boolean.TRUE.equals(request.isDefault())) {
-      user.getAddresses()
-          .forEach(a -> a.setDefault(false));
+      user.getAddresses().stream()
+          .filter(Address::isDefault)
+          .findFirst()
+          .ifPresent(a -> a.setDefault(false));
     }
 
     // 4. Add the address to the user and save
