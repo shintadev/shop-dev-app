@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.enums.user.UserRole;
 import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
+import com.shintadev.shop_dev_app.domain.model.cart.Cart;
 import com.shintadev.shop_dev_app.domain.model.order.Order;
 
 import jakarta.persistence.CascadeType;
@@ -22,6 +23,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -83,6 +85,10 @@ public class User extends BaseEntity implements UserDetails {
   @ToString.Exclude
   @Builder.Default
   private Set<Order> orders = new HashSet<>();
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @ToString.Exclude
+  private Cart cart;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -192,9 +192,8 @@ public class ProductServiceImpl implements ProductService {
         .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
 
     product.setStatus(ProductStatus.DELETED);
-    product.setDeleted(true);
 
-    productRepo.save(product);
+    productRepo.save(product); // TODO: Soft delete
   }
 
   @Override

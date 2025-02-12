@@ -1,7 +1,7 @@
 package com.shintadev.shop_dev_app.domain.model.cart;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.model.user.User;
@@ -31,5 +31,5 @@ public class Cart extends BaseEntity{
 
   @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
-  private Set<CartItem> cartItems = new HashSet<>();
+  private List<CartItem> cartItems = new ArrayList<>();
 }

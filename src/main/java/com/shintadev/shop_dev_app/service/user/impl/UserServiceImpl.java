@@ -190,9 +190,8 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
 
     user.setStatus(UserStatus.DELETED);
-    user.setDeleted(true);
 
-    userRepo.save(user);
+    userRepo.save(user); // TODO: Soft delete
 
     // TODO: Send message to Kafka
   }

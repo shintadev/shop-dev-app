@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -19,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "cart_items")
 @EqualsAndHashCode(callSuper = false)
 @SuperBuilder
-public class CartItem extends BaseEntity{
+public class CartItem extends BaseEntity {
 
   @Positive
   @Column(name = "quantity", nullable = false)
@@ -27,6 +28,7 @@ public class CartItem extends BaseEntity{
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cart_id", nullable = false)
+  @ToString.Exclude
   private Cart cart;
 
   @ManyToOne(fetch = FetchType.LAZY)
