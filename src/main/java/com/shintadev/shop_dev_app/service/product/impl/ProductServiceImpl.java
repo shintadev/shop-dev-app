@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
 
     // 2. Create a new product
     Product product = productMapper.toEntity(request);
-    String slug = StringUtil.generateSlug(product);
+    String slug = StringUtil.generateSlug(product.getName());
     product.setSlug(slug);
     product.setStatus(ProductStatus.ACTIVE);
 
