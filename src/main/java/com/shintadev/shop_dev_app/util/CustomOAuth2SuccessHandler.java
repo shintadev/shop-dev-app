@@ -1,6 +1,7 @@
 package com.shintadev.shop_dev_app.util;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shintadev.shop_dev_app.domain.dto.response.auth.LoginResponse;
 import com.shintadev.shop_dev_app.domain.enums.user.UserRole;
 import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
+import com.shintadev.shop_dev_app.domain.model.cart.Cart;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 import com.shintadev.shop_dev_app.repository.user.UserRepo;
 
@@ -35,6 +37,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
       HttpServletRequest request,
       HttpServletResponse response,
       Authentication authentication) throws IOException, ServletException {
+    // 1. Get the user details from the OAuth2User
     OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
     String email = oAuth2User.getAttribute("email");
@@ -46,25 +49,36 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
     String givenName = oAuth2User.getAttribute("given_name");
     String familyName = oAuth2User.getAttribute("family_name");
 
-    User user = userRepo.findByEmail(email)
-        .orElseGet(() -> {
-          String encodedPassword = passwordEncoder
-              .encode(email.subSequence(0, email.indexOf('@')));
-          User newUser = User.builder()
-              .email(email)
-              .password(encodedPassword)
-              .displayName(name)
-              .firstName(givenName)
-              .lastName(familyName)
-              .avatarUrl(picture)
-              .role(UserRole.ROLE_USER)
-              .status(UserStatus.ACTIVE)
-              .build();
-          return userRepo.saveAndFlush(newUser);
-        });
+    // 2. Check if the user already exists in the database
+    Optional<User> userOpt = userRepo.findByEmail(email);
 
+    var user = userOpt.orElse(null);
+
+    // 3. If the user does not exist, create a new user
+    if (userOpt.isEmpty()) {
+      User newUser = User.builder()
+          .email(email)
+          .password(passwordEncoder
+              .encode(email.subSequence(0, email.indexOf('@')))
+              .toString())
+          .displayName(name)
+          .firstName(givenName)
+          .lastName(familyName)
+          .avatarUrl(picture)
+          .status(UserStatus.ACTIVE)
+          .role(UserRole.ROLE_USER)
+          .build();
+
+      // 4. Create a new cart for the user
+      newUser.setCart(new Cart(newUser));
+
+      user = userRepo.saveAndFlush(newUser);
+    }
+
+    // 5. Generate a JWT token
     String token = jwtTokenProvider.createToken(user);
 
+    // 6. Add the token to the response
     response.addHeader("Authorization", "Bearer " + token);
     response.setCharacterEncoding("UTF-8");
     response.getWriter().write(new ObjectMapper()

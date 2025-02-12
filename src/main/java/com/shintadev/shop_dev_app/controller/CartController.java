@@ -29,6 +29,12 @@ public class CartController {
   }
 
   @PreAuthorize("hasRole('USER')")
+  @PostMapping("/update")
+  public ResponseEntity<CartItemResponse> updateCart(@RequestBody CartItemRequest request) {
+    return ResponseEntity.ok(cartService.updateCartItem(request));
+  }
+
+  @PreAuthorize("hasRole('USER')")
   @PostMapping("/remove")
   public ResponseEntity<CartItemResponse> removeFromCart(@RequestParam String productId) {
     return ResponseEntity.ok(cartService.removeFromCart(productId));

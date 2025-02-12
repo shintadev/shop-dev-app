@@ -18,6 +18,7 @@ import com.shintadev.shop_dev_app.domain.dto.response.auth.LoginResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.user.UserResponse;
 import com.shintadev.shop_dev_app.domain.enums.user.UserRole;
 import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
+import com.shintadev.shop_dev_app.domain.model.cart.Cart;
 import com.shintadev.shop_dev_app.domain.model.user.PasswordResetToken;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 import com.shintadev.shop_dev_app.domain.model.user.VerifyEmailToken;
@@ -69,12 +70,15 @@ public class AuthServiceImpl implements AuthService {
     User user = User.builder()
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
+        .displayName(request.getDisplayName())
         .firstName(request.getFirstName())
         .lastName(request.getLastName())
         .phone(request.getPhone())
         .status(UserStatus.INACTIVE)
         .role(UserRole.ROLE_USER)
         .build();
+
+    user.setCart(new Cart(user)); // Create cart for user
 
     User savedUser = userRepo.save(user);
 

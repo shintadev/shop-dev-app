@@ -16,6 +16,7 @@ import com.shintadev.shop_dev_app.domain.dto.request.user.UserRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.user.AddressResponse;
 import com.shintadev.shop_dev_app.domain.dto.response.user.UserResponse;
 import com.shintadev.shop_dev_app.domain.enums.user.UserStatus;
+import com.shintadev.shop_dev_app.domain.model.cart.Cart;
 import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 import com.shintadev.shop_dev_app.exception.ResourceNotFoundException;
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
             .subSequence(0, request
                 .getEmail()
                 .indexOf('@'))));
+    user.setCart(new Cart(user));
 
     User savedUser = userRepo.save(user);
 

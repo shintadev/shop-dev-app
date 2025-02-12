@@ -32,4 +32,9 @@ public class Cart extends BaseEntity{
   @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private List<CartItem> cartItems = new ArrayList<>();
+
+  public Cart(User user) {
+    super();
+    this.user = user;
+  }
 }
