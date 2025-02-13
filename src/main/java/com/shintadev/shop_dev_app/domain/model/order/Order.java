@@ -30,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @Table(name = "orders",
     indexes = {
-        @Index(name = "idx_order_user", columnList = "user_id"),
+        @Index(name = "idx_order_user_id", columnList = "user_id"),
         @Index(name = "idx_order_status", columnList = "status"),
         @Index(name = "idx_order_created_at", columnList = "created_at")
     })
@@ -46,17 +46,18 @@ public class Order extends BaseEntity {
   @Column(name = "total_price", nullable = false)
   private double totalPrice;
 
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
+  @Builder.Default
+  private OrderStatus status = OrderStatus.PENDING;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "address_id", nullable = false)
   private Address address;
 
-  @NotNull
-  @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false, columnDefinition = "varchar(16) default 'PENDING'")
-  private OrderStatus status;
-
   @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

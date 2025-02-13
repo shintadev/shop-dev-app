@@ -1,9 +1,11 @@
 package com.shintadev.shop_dev_app.service.cart.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shintadev.shop_dev_app.domain.dto.request.cart.CartItemRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.cart.CartItemResponse;
@@ -21,6 +23,7 @@ import com.shintadev.shop_dev_app.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
@@ -101,7 +104,7 @@ public class CartServiceImpl implements CartService {
 
     // 2. Check if the product exists in the cart
     CartItem item = cart.getCartItems().stream()
-        .filter(ci -> ci.getProduct().getId().equals(productId))
+        .filter(ci -> ci.getProduct().getId().equals(Long.parseLong(productId)))
         .findFirst()
         .orElseThrow(() -> new ResourceNotFoundException("CartItem", "productId", productId));
 
@@ -125,6 +128,7 @@ public class CartServiceImpl implements CartService {
     return cartMapper.toResponse(cart);
   }
 
+  @Transactional(readOnly = true)
   private Cart getCartEntity() {
     // 1. Get the current user
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -132,5 +136,24 @@ public class CartServiceImpl implements CartService {
     // 2. Check if the cart exists, if not create a new one
     return cartRepo.findByUserId(user.getId())
         .orElseGet(() -> create(Cart.builder().user(user).build()));
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Cart getCartByUserId(Long userId) {
+    return cartRepo.findByUserId(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("Cart", "userId", userId.toString()));
+  }
+
+  @Override
+  public void removeCartItems(Long userId, List<Long> cartItemIds) {
+    // 1. Get the current user's cart
+    Cart cart = getCartByUserId(userId);
+
+    // 2. Remove the cart items
+    cart.getCartItems().removeIf(item -> cartItemIds.contains(item.getId()));
+
+    // 3. Save the cart
+    cartRepo.save(cart);
   }
 }
