@@ -19,6 +19,6 @@ public interface OrderRepo extends JpaRepository<Order, Long>, JpaSpecificationE
   Page<Order> findByUserId(Long userId, Pageable pageable);
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("SELECT o FROM Order o WHERE o.id = ?1")
-  Order findByIdForUpdate(Long id);
+  @Query("SELECT o FROM Order o WHERE o.orderNumber = ?1")
+  Order findByOrderNumber(String orderNumber);
 }

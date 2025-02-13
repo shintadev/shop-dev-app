@@ -75,9 +75,10 @@ firebase:
   service-account-file: ${FIREBASE_SERVICE_ACCOUNT_FILE:firebase-credentials.json}
 
 payos:
+  client-id: ${PAYOS_CLIENT_ID}
   api-key: ${PAYOS_API_KEY}
-  api-secret: ${PAYOS_API_SECRET}
-  endpoint: ${PAYOS_ENDPOINT}
+  checksum-key: ${PAYOS_CHECKSUM_KEY}
+
 
 logging:
   level:

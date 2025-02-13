@@ -1,11 +1,12 @@
 package com.shintadev.shop_dev_app.service.order;
 
-import com.shintadev.shop_dev_app.domain.enums.order.PaymentMethod;
 import com.shintadev.shop_dev_app.domain.model.order.Order;
-import com.shintadev.shop_dev_app.domain.model.order.Payment;
+
+import vn.payos.type.CheckoutResponseData;
+import vn.payos.type.Webhook;
 
 public interface PaymentService {
-  Payment createPayment(Order order, PaymentMethod paymentMethod);
+  CheckoutResponseData createPayment(Order order);
 
-  Payment processPayment(Payment payment);
+  void processPayment(String orderNumber, Webhook webhook);
 }

@@ -21,6 +21,7 @@ public interface OrderMapper {
   OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
 
   @Mapping(target = "address.isDefault", source = "address.default")
+  @Mapping(target = "checkoutResponseData", ignore = true)
   OrderResponse toResponse(Order order);
 
   @Mapping(target = "productName", source = "product.name")

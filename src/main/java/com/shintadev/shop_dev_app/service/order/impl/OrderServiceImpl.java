@@ -17,6 +17,7 @@ import com.shintadev.shop_dev_app.domain.dto.request.order.OrderRequest;
 import com.shintadev.shop_dev_app.domain.dto.response.order.OrderResponse;
 import com.shintadev.shop_dev_app.domain.enums.order.OrderSource;
 import com.shintadev.shop_dev_app.domain.enums.order.OrderStatus;
+import com.shintadev.shop_dev_app.domain.enums.order.PaymentStatus;
 import com.shintadev.shop_dev_app.domain.model.cart.Cart;
 import com.shintadev.shop_dev_app.domain.model.cart.CartItem;
 import com.shintadev.shop_dev_app.domain.model.order.Order;
@@ -35,6 +36,7 @@ import com.shintadev.shop_dev_app.service.order.PaymentService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import vn.payos.type.CheckoutResponseData;
 
 @Service
 @RequiredArgsConstructor
@@ -71,15 +73,17 @@ public class OrderServiceImpl implements OrderService {
       }
 
       // 5. Calculate total price
-      double totalPrice = calculateTotalPrice(orderItems);
+      BigDecimal totalPrice = calculateTotalPrice(orderItems);
 
       // 6. Create order
+      String orderNumber = String.format("%010d", System.currentTimeMillis());
       Order order = Order.builder()
           .user(currentUser)
           .status(OrderStatus.PENDING)
           .address(address)
-          .orderNumber(UUID.randomUUID().toString())
+          .orderNumber(orderNumber)
           .totalPrice(totalPrice)
+          .paymentStatus(PaymentStatus.PENDING)
           .orderItems(orderItems)
           .build();
 
@@ -87,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
       order = orderRepo.save(order);
 
       // 8. Create payment
-      paymentService.createPayment(order, request.getPaymentMethod());
+      CheckoutResponseData checkoutResponseData = paymentService.createPayment(order);
 
       // 9. Clear cart's item
       if (request.getOrderSource() == OrderSource.CART_SELECTED) {
@@ -98,7 +102,10 @@ public class OrderServiceImpl implements OrderService {
       // TODO: Send Kafka event
 
       // 11. Return order response
-      return orderMapper.toResponse(order);
+      OrderResponse orderResponse = orderMapper.toResponse(order);
+      orderResponse.setCheckoutResponseData(checkoutResponseData);
+
+      return orderResponse;
     } catch (Exception e) {
       log.error("Order placement failed", e);
       throw new RuntimeException("Failed to place order: " + e.getMessage());
@@ -132,27 +139,16 @@ public class OrderServiceImpl implements OrderService {
         .toList();
 
     // 3. Convert selected cart items to order items
-    return convertCartItemsToOrderItems(selectedItems);
-  }
-
-  private Set<OrderItem> convertCartItemsToOrderItems(Collection<CartItem> cartItems) {
-    // 1. Convert cart items to order items
-    return cartItems.stream()
-        .map(cartItem -> OrderItem.builder()
-            .product(cartItem.getProduct())
-            .quantity(cartItem.getQuantity())
-            .unitPrice(cartItem.getProduct().getPrice())
-            .subtotal(cartItem.getProduct().getPrice()
-                .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
-            .build())
+    return selectedItems.stream()
+        .map(orderMapper::convertToOrderItem)
         .collect(Collectors.toSet());
   }
 
-  private double calculateTotalPrice(Set<OrderItem> orderItems) {
+  private BigDecimal calculateTotalPrice(Set<OrderItem> orderItems) {
     // 1. Calculate total price
     return orderItems.stream()
-        .mapToDouble(item -> item.getSubtotal().doubleValue())
-        .sum();
+        .map(OrderItem::getSubtotal)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   private void clearCartItems(User user, OrderRequest request) {

@@ -1,10 +1,12 @@
 package com.shintadev.shop_dev_app.domain.model.order;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.shintadev.shop_dev_app.base.BaseEntity;
 import com.shintadev.shop_dev_app.domain.enums.order.OrderStatus;
+import com.shintadev.shop_dev_app.domain.enums.order.PaymentStatus;
 import com.shintadev.shop_dev_app.domain.model.user.Address;
 import com.shintadev.shop_dev_app.domain.model.user.User;
 
@@ -44,7 +46,7 @@ public class Order extends BaseEntity {
 
   @NotNull
   @Column(name = "total_price", nullable = false)
-  private double totalPrice;
+  private BigDecimal totalPrice;
 
   @NotNull
   @Enumerated(EnumType.STRING)
@@ -64,6 +66,5 @@ public class Order extends BaseEntity {
   @Builder.Default
   private Set<OrderItem> orderItems = new HashSet<>();
 
-  @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Payment payment;
+  private PaymentStatus paymentStatus;
 }

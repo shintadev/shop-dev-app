@@ -2,7 +2,6 @@ package com.shintadev.shop_dev_app.domain.enums.order;
 
 public enum PaymentStatus {
   PENDING,
-  COMPLETED,
-  FAILED,
-  REFUNDED
+  PAID,
+  CANCELLED
 }

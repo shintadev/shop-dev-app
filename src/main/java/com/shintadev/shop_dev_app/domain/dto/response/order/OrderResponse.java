@@ -8,6 +8,7 @@ import com.shintadev.shop_dev_app.domain.dto.response.user.AddressResponse;
 
 import lombok.Builder;
 import lombok.Data;
+import vn.payos.type.CheckoutResponseData;
 
 @Data
 @Builder
@@ -21,5 +22,5 @@ public class OrderResponse {
   private List<OrderItemResponse> orderItems;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  // private PaymentResponse payment;
+  private CheckoutResponseData checkoutResponseData;
 }
