@@ -2,6 +2,7 @@ package com.shintadev.shop_dev_app.service.product.impl;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import com.shintadev.shop_dev_app.domain.dto.response.product.ProductResponse;
 import com.shintadev.shop_dev_app.domain.enums.product.ProductStatus;
 import com.shintadev.shop_dev_app.domain.model.product.Category;
 import com.shintadev.shop_dev_app.domain.model.product.Product;
+import com.shintadev.shop_dev_app.exception.BusinessException;
 import com.shintadev.shop_dev_app.exception.ResourceNotFoundException;
 import com.shintadev.shop_dev_app.mapper.ProductMapper;
 import com.shintadev.shop_dev_app.repository.product.CategoryRepo;
@@ -44,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     // 1. Check if the product name already exists
     if (productRepo.existsByName(request.getName())) {
       log.error("Product name {} already exists", request.getName());
-      throw new RuntimeException("Product name already exists");
+      throw new BusinessException("Product name already exists", "PRODUCT_NAME_ALREADY_EXISTS");
     }
 
     // 2. Create a new product
@@ -56,7 +58,8 @@ public class ProductServiceImpl implements ProductService {
     // 3. Set the category for the product
     if (request.getCategoryId() != null) {
       Category category = categoryRepo.findById(Long.parseLong(request.getCategoryId()))
-          .orElseThrow(() -> new ResourceNotFoundException("Category", "id", request.getCategoryId()));
+          .orElseThrow(
+              () -> new ResourceNotFoundException(Category.class.getSimpleName(), "id", request.getCategoryId()));
       product.setCategory(category);
     }
 
@@ -110,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public ProductResponse findOne(Long id) {
     Product product = productRepo.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
+        .orElseThrow(() -> new ResourceNotFoundException(Product.class.getSimpleName(), "id", id.toString()));
 
     return productMapper.toResponse(product);
   }
@@ -119,7 +122,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public ProductResponse findBySlug(String slug) {
     Product product = productRepo.findBySlug(slug)
-        .orElseThrow(() -> new ResourceNotFoundException("Product", "slug", slug));
+        .orElseThrow(() -> new ResourceNotFoundException(Product.class.getSimpleName(), "slug", slug));
 
     return productMapper.toResponse(product);
   }
@@ -128,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   public List<ProductResponse> getRelatedProducts(String slug) {
     List<Product> relatedProducts = productRepo.findRelatedProducts(slug,
-        (Pageable) PageRequest.of(0, 10));
+        PageRequest.of(0, 10));
 
     return relatedProducts.stream()
         .map(productMapper::toResponse)
@@ -162,7 +165,7 @@ public class ProductServiceImpl implements ProductService {
   public ProductResponse update(Long id, ProductUpdateRequest request) {
     // 1. Check if the product exists
     Product existingProduct = productRepo.findByIdForUpdate(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
+        .orElseThrow(() -> new ResourceNotFoundException(Product.class.getSimpleName(), "id", id.toString()));
 
     productMapper.updateFromRequest(request, existingProduct);
 
@@ -189,7 +192,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public void delete(Long id) {
     Product product = productRepo.findByIdForUpdate(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
+        .orElseThrow(() -> new ResourceNotFoundException(Product.class.getSimpleName(), "id", id.toString()));
 
     product.setStatus(ProductStatus.DELETED);
 
