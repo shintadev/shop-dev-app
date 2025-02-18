@@ -37,7 +37,7 @@ public class OrderController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping
+  @GetMapping("/admin")
   public ResponseEntity<Page<OrderResponse>> findAll(
       @RequestParam int page,
       @RequestParam(defaultValue = "10") int size,
